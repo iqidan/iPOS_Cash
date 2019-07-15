@@ -1,0 +1,33 @@
+@import './var.scss';
+@import './mixin.scss';
+
+.del3px {
+  font-size: 0;
+  // line-height: 0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.line1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.none {
+  display: none;
+}
+
+@for $i from 2 through 10 {
+  .line#{$i} {
+    display: -webkit-box;
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: #{$i};
+    overflow: hidden;
+  }
+}
