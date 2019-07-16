@@ -118,7 +118,7 @@ axiosInstance.interceptors.response.use(
  * @returns {Promise} [回调参数为接口数据]
  */
 const http = {
-    post: function(url, data, config) {
+    post: function(url, data, config = {}) {
         // 登录接口参数格式不同
         if (config.isLogin) {
             return axiosInstance.post(url, data, config);
@@ -128,7 +128,7 @@ const http = {
             }, config);
         }
     },
-    get: function(url, params, config) {
+    get: function(url, params, config = {}) {
         return axiosInstance.get(url, params, config);
     }
 };
