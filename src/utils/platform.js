@@ -1,6 +1,6 @@
 const u = window.navigator.userAgent;
 
-export const isIos = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+export const isIos = Boolean(u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/));
 
 export const isIphone = u.match(/(iPhone\sOS)\s([\d_]+)/);
 

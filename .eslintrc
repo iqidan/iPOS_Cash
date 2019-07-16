@@ -16,14 +16,14 @@
     "no-implicit-coercion": 2,
     "no-implied-eval": 2,
     "indent": ["error", 4],
-    "no-magic-numbers": 2,
     "no-multi-spaces": 2,
     "no-multi-str": 2,
     "no-new": 2,
     "no-redeclare": 2,
     "no-unused-expressions": 2,
     "require-await": 2,
-    "no-var": 2
+    "no-var": 2,
+    "quotes": ["error", "single"]
   },
   "parserOptions": {
     "parser": "babel-eslint"

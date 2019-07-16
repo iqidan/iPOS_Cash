@@ -7,13 +7,23 @@
 
 <script>
 export default {
-  name: "Index",
-  components: {
-  },
-  data() {
-    return {
-    };
-  }
+    name: 'Index',
+    components: {},
+    data() {
+        return {};
+    },
+    created() {
+        this.$http.post('purview/user/get_list', {
+            ty: '2',
+            shop_code: 'A024'
+        });
+        // this.$http.get('purview/user/get_list', {
+        //     ty: '2',
+        //     shop_code: 'A024'
+        // });
+    },
+    methods: {
+    }
 };
 </script>
 
@@ -26,5 +36,6 @@ export default {
   font-size: 28px;
   flex-direction: column;
   width: 750px;
+  flex: 1;
 }
 </style>
