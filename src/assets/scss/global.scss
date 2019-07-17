@@ -10,6 +10,16 @@ img {
   width: 100%;
 }
 
-// ::-webkit-input-placeholder {
-//   color: #c1c1c1;
-// }
+.iconfont {
+  font-size: 0;
+  width: 56px;
+}
+
+input {
+  outline: none;
+  border: 0;
+}
+
+::-webkit-input-placeholder {
+  color: #707070;
+}

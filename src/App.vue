@@ -1,22 +1,29 @@
 <template>
     <div id="content">
-        <transition name="slide-left">
-            <router-view class="child-view" />
-        </transition>
+        <router-view class="child-view" />
+        <TabBar />
     </div>
 </template>
 
 <script>
+import TabBar from 'components/TabBar';
+
 export default {
+    components: {
+        TabBar
+    }
 };
 </script>
 
 <style lang="scss">
+@import '~/scss/helper.scss';
+
 #content {
     width: 100vw;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: $color-bg;
 }
 
 .child-view {
@@ -32,6 +39,7 @@ export default {
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
+    padding-bottom: 110px;
 }
 .slide-left-enter {
     opacity: 0;

@@ -1,136 +1,117 @@
-import axios from 'axios';
-import MD5 from 'js-md5';
-import qs from 'querystring';
-import config from '@/constants/config';
-import { toast, Indicator } from 'mint-ui';
+import http from './config';
 
-/**
- * 生成接口公共参数
- * @returns {Object} - [包括sign、token、key、version、time、no_exchange_jsdm]
- */
-function generateParams() {
-    // TODO:
-    const token =
-        'QTAyNDA1X2JkOWVlMDdjM2Y3YzQ2OWFhZDdhYTBhMDc2YzY3ZjZkX2ExMjM0NTY=';
-    const { version, key, password, no_exchange_jsdm } = config;
-
-    const date = new Date();
-    const timeStamp = Math.floor(date.getTime() / 1000);
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    month = month > 10 ? month : '0' + month;
-    day = day > 10 ? day : '0' + day;
-
-    const signStr = key + password + year + '-' + month + '-' + day;
-    const sign = MD5(signStr);
-
-    return {
-        sign,
-        token,
-        key,
-        version,
-        no_exchange_jsdm,
-        time: timeStamp
-    };
-}
-
-// 多个请求并发时，以最晚结束的状态为准，关闭loading状态
-class Loading {
-    constructor () {
-        this.stacks = 0;
-        this.ctx = Indicator;
-    }
-
-    close () {
-        this.stacks--;
-        if (this.stacks <= 0) {
-            this.stacks = 0;
-            this.ctx.close();
-        }
-    }
-
-    open () {
-        if (this.stacks === 0) {
-            this.ctx.open({
-                spinnerType: 'fading-circle'
-            });
-        }
-        this.stacks++;
-    }
-}
-
-// 本地/线上地址区分处理
-const isDebug = ['192.168', 'localhost'].some(ip => location.host.includes(ip));
-const urlPrefix = isDebug ? config.url : config.gateway;
-const loading = new Loading();
-
-const axiosInstance = axios.create({
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Accept: 'application/json'
+export default {
+    login(params) {
+        return http.post('base/shop/shop_login_pos', params, { isLogin: 1 });
     },
-    transformRequest: [
-        function(data) {
-            return qs.stringify(Object.assign(generateParams(), data));
-        }
-    ]
-});
 
-// 请求拦截
-axiosInstance.interceptors.request.use(
-    function(config) {
-        if (!config.noLoading) loading.open();
-        config.url = urlPrefix + config.url;
-        return config;
+    //搜索商品
+    search_goods(params) {
+        return http.post(
+            'stock/dim_allocate_order_record/phone_search_good',
+            params
+        );
     },
-    function(error) {
-        toast('请求失败，请稍后再试');
-        loading.close();
-        return Promise.reject(error);
-    }
-);
+    //查询邻店
+    get_friend_shop(params) {
+        return http.post('index/route&api=base/shop/get_friend_shop_u', {
+            shop_code: this.shopInfo.shop_code,
+            ...params
+        });
+    },
+    //查询库存
+    get_goods_stock(params) {
+        return http.post('base/goods/get_goods_inv', params);
+    },
+    //查询店铺
+    get_shop(params) {
+        return http.post('base/shop/get_list', params);
+    },
 
-axiosInstance.interceptors.response.use(
-    function(response) {
-        loading.close();
-        if (response.data.status === 1) {
-            return response;
-        } else {
-            toast(response.data.message);
-            return Promise.reject();
-        }
+    //查询横调出库列表
+    get_stock_out_list(params) {
+        return http.post(
+            'stock/stm_store_shift_record/shift_out_get_list',
+            params
+        );
     },
-    function(error) {
-        loading.close();
-        toast('响应失败，请稍后再试');
-        return Promise.reject(error);
-    }
-);
 
-/**
- * @param {String} url [请求路径]
- * @param {Object} data [请求参数] - post请求体
- * @param {Object} params [请求参数] - get请求(地址栏)
- * @param {Object|Undefined} config [axios配置] - 可覆盖默认配置
- *                              - config.isLogin [为1是登录接口]
- *                              - config.noLoading [为1则不显示loading菊花图]
- * @returns {Promise} [回调参数为接口数据]
- */
-const http = {
-    post: function(url, data, config = {}) {
-        // 登录接口参数格式不同
-        if (config.isLogin) {
-            return axiosInstance.post(url, data, config);
-        } else {
-            return axiosInstance.post(url, {
-                dataContent: JSON.stringify([data])
-            }, config);
-        }
+    //查询横调出库详情
+    get_stock_out_detail(params) {
+        return http.post(
+            'stock/stm_store_shift_record/shift_out_get_detail',
+            params
+        );
     },
-    get: function(url, params, config = {}) {
-        return axiosInstance.get(url, params, config);
+
+    //新增横调出库单
+    add_stock_out_record(params) {
+        return http.post('stock/stm_store_shift_record/add_by_pos', params);
+    },
+
+    //查询盘点单列表
+    get_stock_check_list(params) {
+        return http.post('stock/stm_take_stock_record/get_list', params);
+    },
+
+    //查询盘点单详情
+    get_stock_check_detail(params) {
+        return http.post('stock/stm_take_stock_record/get_detail', params);
+    },
+
+    //新增盘点单
+    add_stock_check_record(params) {
+        return http.post('stock/stm_take_stock_record/add_by_app', params);
+    },
+
+    //更新库存明细数据
+    update_stock_detail(params) {
+        return http.post('stock/stm_take_stock_record/update_detail', params);
+    },
+
+    //查询盘点任务单列表
+    get_stock_task_list(params) {
+        return http.post('stock/stm_take_stock_task_record/get_list', params);
+    },
+
+    //获取盘点任务单号(本店查询)
+    get_stock_tast_local_lsit(params) {
+        return http.post('base/system/pan_dian_task_search_local', params);
+    },
+
+    //查询横调入库列表
+    get_stock_in_list(params) {
+        return http.post(
+            'stock/stm_store_shift_record/shift_in_get_list',
+            params
+        );
+    },
+
+    //查询横调入库详情
+    get_stock_in_detail(params) {
+        return http.post(
+            'stock/stm_store_shift_record/shift_in_get_detail',
+            params
+        );
+    },
+
+    //横调入库单入库
+    stock_in(params) {
+        return http.post('stock/stm_store_shift_record/store_in', params);
+    },
+
+    //获取店员
+    get_user_list(params) {
+        return http.post('purview/user/get_list', params);
+    },
+
+    //获取单据类型
+    get_record_type(params) {
+        return http.post('base/system/get_record_type', params);
+    },
+
+    //获取单据编号
+    get_record_code(params) {
+        return http.post('base/shop/get_record_code', params);
     }
 };
-
-export default http;

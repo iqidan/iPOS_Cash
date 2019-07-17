@@ -1,0 +1,115 @@
+<template>
+    <div class="search">
+        <div class="filters" @click.capture="popupVisible = true">
+            <span class="line1">所有</span>
+            <i class="triangle"></i>
+            
+            <mt-popup class="filter-list" v-model="popupVisible">
+                <mt-radio
+                    class="item-list"
+                    v-model="checked"
+                    align="right"
+                    :options="selectList"
+                />
+            </mt-popup>
+        </div>
+        <!-- <input class="input" type="text" placeholder="请输入小票单号" /> -->
+        <mt-field class="input" placeholder="请输入小票单号"/>
+    </div>
+</template>
+
+<script>
+import { Radio, Popup, Field } from 'mint-ui';
+
+export default {
+    name: 'Search',
+    components: {
+        MtRadio: Radio,
+        MtField: Field,
+        MtPopup: Popup
+    },
+    props: {
+        selectList: { // 选项列表
+            type: Array,
+            required: true
+        }
+    },
+    data() {
+        return {
+            checked: this.selectList[0],
+            popupVisible: false
+        };
+    },
+    created () {
+    },
+    methods: {
+    }
+};
+</script>
+
+<style lang="scss" scoped>
+.search {
+    display: flex;
+    font-size: 24px;
+    background-color: #e1e1e1;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-left: 10px;
+    width: 120px;
+    position: relative;
+    span {
+        text-align: center;
+        flex: 1 0 0;
+    }
+    i {
+        margin-top: 12px;
+        display: block;
+        border: 10px solid transparent;
+        border-top-color: #999;
+    }
+}
+
+.input {
+    padding-left: 20px;
+    flex: 1;
+    min-height: auto;
+    border-radius: inherit;
+    background-color: inherit;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    /deep/ input {
+        background-color: #e1e1e1;
+    }
+}
+
+.filter-list {
+    top: 224px;
+    left: 220px;
+    border-radius: 10px;
+    background-color: #fff;
+    &::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        display: block;
+        transform: translateX(-50%);
+        border: 10px solid transparent;
+        border-bottom-color: #fff;
+    }
+    .item-list {
+        border-radius: inherit;
+        overflow: hidden;
+    }
+    .filter-item {
+        height: 100px;
+        line-height: 100px;
+    }
+}
+
+</style>

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 import Index from '@/views/Index/index';
 import Login from '@/views/Login/login';
+import Transfer from 'views/transfer';
 
 Vue.use(Router);
 
@@ -16,9 +17,20 @@ const router = new Router({
             path: '/login',
             component: Login
         },
+        // index页面
         {
             path: '/index',
-            component: Index
+            component: Transfer,
+            children: [
+                {
+                    path: '',
+                    component: Index
+                },
+                {
+                    path: 'test',
+                    component: () => import('views/Index/test')
+                }
+            ]
         },
     ]
 });
