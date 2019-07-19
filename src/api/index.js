@@ -113,5 +113,10 @@ export default {
     //获取单据编号
     get_record_code(params) {
         return http.post('base/shop/get_record_code', params);
+    },
+
+    // 获取订单列表
+    get_order_list (params) {
+        return http.post('pos/pos/get_receipt_list', params);
     }
 };

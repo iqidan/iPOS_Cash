@@ -4,9 +4,10 @@
             v-for="item in tabList"
             :key="item"
             :id="item"
-            class="center bar-item"
+            class="bar-item"
             @click.native="changeTab(item)"
         >
+            <icon-font slot="icon" class="icon" icon="scan" />
             {{ item }}
         </mt-tabitem>
     </mt-tabbar>
@@ -19,7 +20,7 @@ export default {
     name: 'TabBar',
     data() {
         return {
-            tabList: ['/index', '/login', '/test', '/test2'],
+            tabList: ['/cashier', '/order', '/stock', '/setting'],
             activeIndex: ''
         };
     },
@@ -40,7 +41,7 @@ export default {
     },
     methods: {
         changeTab(path) {
-            this.$router.replace(path);
+            this.$router.push(path);
             this.activeIndex = path;
         }
     }
@@ -52,5 +53,10 @@ export default {
     font-size: 40px;
     z-index: 20;
     height: 110px;
+}
+
+.bar-item {
+    display: flex;
+    flex-direction: column
 }
 </style>

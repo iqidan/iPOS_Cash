@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Index from '@/views/Index/index';
+import Cashier from '@/views/Cashier/cashier';
 import Login from '@/views/Login/login';
 import Transfer from 'views/transfer';
 
@@ -11,24 +11,46 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            redirect: '/index'
+            redirect: '/cashier'
         },
         {
             path: '/login',
+            name: 'Login',
             component: Login
         },
-        // index页面
+        // Cashier
         {
-            path: '/index',
+            path: '/cashier',
             component: Transfer,
             children: [
                 {
                     path: '',
-                    component: Index
+                    name: 'Cashier',
+                    meta: {
+                        keepAlive: true,
+                    },
+                    component: Cashier
                 },
                 {
                     path: 'test',
-                    component: () => import('views/Index/test')
+                    component: () => import('views/Cashier/test')
+                }
+            ]
+        },
+        // Order
+        {
+            path: '/order',
+            component: Transfer,
+            children: [
+                {
+                    path: '',
+                    name: 'Order',
+                    component: () => import('views/Order/order')
+                },
+                {
+                    path: 'detail/:order_id',
+                    name: 'OrderDetail',
+                    component: () => import('views/Order/detail')
                 }
             ]
         },

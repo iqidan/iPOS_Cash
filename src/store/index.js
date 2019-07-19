@@ -1,24 +1,22 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 
-Vue.use(Vuex);
-
-const store = new Vuex.Store({
-    state: {
+const store = new Vue({
+    data: {
         shopConfig: {}
     },
-    getters: {
-        getShopConfig (state) {
-            return state.shopConfig;
-        }
+    created() {
+        this.setShopConfig(this.getLocalConfig());
     },
-    mutations: {
-        setShopConfig (state, config) {
-            state.shopConfig = config;
-            localStorage.setItem('bskey_shop', JSON.stringify(config));
+    methods: {
+        setShopConfig (config = {}) {
+            this.shopConfig = config;
+            localStorage.setItem('bskey_shop', JSON.stringify(config))
+        },
+        getLocalConfig () {
+            const configStr = localStorage.getItem('bskey_shop') || '{}';
+            return JSON.parse(configStr);
         }
-    },
-    actions: {}
+    }
 });
 
 export default store;

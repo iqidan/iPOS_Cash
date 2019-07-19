@@ -1,5 +1,5 @@
 <template>
-    <div class="index">
+    <div class="cashier">
         <Heads
             @changeFilter="selectFilterItem"
             :select-list="selectList"
@@ -25,7 +25,7 @@ import api from '@/api';
 import Heads from 'components/Heads';
 
 export default {
-    name: 'Index',
+    name: 'Cashier',
     components: {
         Heads
     },
@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         selectFilterItem(item) {
-            console.log('this is index page');
+            console.log('this is cashier page');
             console.log(item);
         }
     }
@@ -52,7 +52,7 @@ export default {
 <style lang="scss" scoped>
 @import "~/scss/helper.scss";
 
-.index {
+.cashier {
     display: flex;
     font-size: 28px;
     flex-direction: column;

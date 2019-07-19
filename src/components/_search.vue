@@ -1,7 +1,7 @@
 <template>
     <div class="search">
         <div class="filters" @click.capture="popupVisible = true">
-            <span class="line1">{{selectList[0]}}</span>
+            <span class="line1">{{checked}}</span>
             <i class="triangle"></i>
 
             <mt-popup class="filter-list" v-model="popupVisible">
@@ -45,8 +45,6 @@ export default {
             popupVisible: false
         };
     },
-    created () {
-    },
     methods: {
         selectFilter () {
             this.popupVisible = false;
@@ -59,7 +57,7 @@ export default {
 <style lang="scss" scoped>
 .search {
     display: flex;
-    font-size: 24px;
+    font-size: 28px;
     background-color: #e1e1e1;
 }
 
@@ -90,8 +88,9 @@ export default {
     background-color: inherit;
     display: flex;
     align-items: center;
-    font-size: 24px;
     /deep/ input {
+        font-size: 28px;
+        line-height: 28px;
         background-color: #e1e1e1;
     }
 }
