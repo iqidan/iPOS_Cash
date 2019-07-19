@@ -1,6 +1,9 @@
 <template>
     <div id="content">
-        <router-view class="child-view" />
+        <keep-alive>
+            <router-view class="child-view" v-if="$route.meta.keepAlive"/>
+        </keep-alive>
+        <router-view class="child-view" v-if="!$route.meta.keepAlive"/>
         <TabBar />
     </div>
 </template>

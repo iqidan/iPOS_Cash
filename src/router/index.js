@@ -3,7 +3,6 @@ import Router from 'vue-router';
 
 import Cashier from '@/views/Cashier/cashier';
 import Login from '@/views/Login/login';
-import Transfer from 'views/transfer';
 
 Vue.use(Router);
 
@@ -16,44 +15,37 @@ const router = new Router({
         {
             path: '/login',
             name: 'Login',
+            meta: {
+                title: '收银台登录'
+            },
             component: Login
         },
         // Cashier
         {
             path: '/cashier',
-            component: Transfer,
-            children: [
-                {
-                    path: '',
-                    name: 'Cashier',
-                    meta: {
-                        keepAlive: true,
-                    },
-                    component: Cashier
-                },
-                {
-                    path: 'test',
-                    component: () => import('views/Cashier/test')
-                }
-            ]
+            name: 'Cashier',
+            meta: {
+                title: '收银台',
+                keepAlive: true
+            },
+            component: Cashier
+        },
+        {
+            path: '/cashier/test',
+            name: 'Test',
+            component: () => import('views/Cashier/test')
         },
         // Order
         {
             path: '/order',
-            component: Transfer,
-            children: [
-                {
-                    path: '',
-                    name: 'Order',
-                    component: () => import('views/Order/order')
-                },
-                {
-                    path: 'detail/:order_id',
-                    name: 'OrderDetail',
-                    component: () => import('views/Order/detail')
-                }
-            ]
+            name: 'Order',
+            component: () => import('views/Order/order')
         },
+        {
+            path: '/order/detail/:order_id',
+            name: 'OrderDetail',
+            component: () => import('views/Order/detail')
+        }
     ]
 });
 
