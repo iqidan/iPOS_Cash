@@ -1,8 +1,23 @@
 <template>
-  <div class="index">
-    <Heads :select-list="selectList" :showFilters="showFilters"/>
-    <div class="cashier-summary"></div>
-  </div>
+    <div class="index">
+        <Heads
+            @changeFilter="selectFilterItem"
+            :select-list="selectList"
+            :placeholder="'搜索商品'"/>
+        <div class="cashier-summary">
+            <div class="content summary-content">
+                <div class="content-top">
+                    <span>合计：</span>
+                    <span class="red">￥0.00</span>
+                </div>
+                <div class="content-bottom">
+                    <span>数量：</span>
+                    <span>0</span>
+                </div>
+            </div>
+            <button class="btn">确定</button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -12,16 +27,11 @@ import Heads from 'components/Heads';
 export default {
     name: 'Index',
     components: {
-      Heads
+        Heads
     },
     data() {
         return {
-            showFilters: false,
-            selectList: [
-                '全部',
-                '会员',
-                '号码'
-            ]
+            selectList: ['商品', '会员', '优惠券']
         };
     },
     created() {
@@ -31,7 +41,7 @@ export default {
         // });
     },
     methods: {
-        selectFilterItem (item) {
+        selectFilterItem(item) {
             console.log('this is index page');
             console.log(item);
         }
@@ -43,11 +53,11 @@ export default {
 @import "~/scss/helper.scss";
 
 .index {
-  display: flex;
-  font-size: 28px;
-  flex-direction: column;
-  flex: 1;
-  position: relative;
+    display: flex;
+    font-size: 28px;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
 }
 
 .cashier-summary {
@@ -55,8 +65,36 @@ export default {
     bottom: 110px;
     width: 100%;
     height: 120px;
-    background-color: lightgreen;
+    display: flex;
     @include border-1px(#c8c7cc, bottom, top);
     position: absolute;
+}
+
+.summary-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .content-top {
+        font-weight: 500;
+        font-size: 40px;
+        padding-bottom: 12px;
+    }
+    .content-bottom {
+        font-size: 30px;
+    }
+    .red {
+        color: red;
+    }
+}
+
+.btn {
+    width: 200px;
+    font-size: 36px;
+    color: #fff;
+    background-color: #d0d0d0;
+    .active {
+        color: #e30107;
+    }
 }
 </style>

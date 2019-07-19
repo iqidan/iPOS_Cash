@@ -1,20 +1,21 @@
 <template>
     <div class="search">
         <div class="filters" @click.capture="popupVisible = true">
-            <span class="line1">所有</span>
+            <span class="line1">{{selectList[0]}}</span>
             <i class="triangle"></i>
-            
+
             <mt-popup class="filter-list" v-model="popupVisible">
                 <mt-radio
                     class="item-list"
                     v-model="checked"
                     align="right"
                     :options="selectList"
+                    @change="selectFilter"
                 />
             </mt-popup>
         </div>
         <!-- <input class="input" type="text" placeholder="请输入小票单号" /> -->
-        <mt-field class="input" placeholder="请输入小票单号"/>
+        <mt-field class="input" :placeholder="placeholder"/>
     </div>
 </template>
 
@@ -32,6 +33,10 @@ export default {
         selectList: { // 选项列表
             type: Array,
             required: true
+        },
+        placeholder: {
+            type: String,
+            default: '请输入搜索内容'
         }
     },
     data() {
@@ -43,6 +48,10 @@ export default {
     created () {
     },
     methods: {
+        selectFilter () {
+            this.popupVisible = false;
+            this.$emit('changeFilter', this.checked);
+        }
     }
 };
 </script>

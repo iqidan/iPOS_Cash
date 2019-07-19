@@ -1,8 +1,8 @@
 <template>
-    <header class="heads">
+    <header class="heads content">
         <icon-font class="icon" icon="scan" />
         <search v-bind="$attrs" v-on="$listeners" class="search" />
-        <div class="cancel center">
+        <div v-if="showBtn" class="cancel center">
             取消
         </div>
     </header>
@@ -15,6 +15,12 @@ export default {
     name: 'Heads',
     components: {
         Search
+    },
+    props: {
+        showBtn: {
+            type: Boolean,
+            default: false
+        }
     }
 }
 </script>
@@ -28,7 +34,6 @@ export default {
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
-    padding: 0 20px;
     background-color: #f4f4f4;
     @include border-1px(#c8c7cc, bottom);
 }

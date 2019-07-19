@@ -15,9 +15,14 @@ img {
   width: 56px;
 }
 
+button,
 input {
   outline: none;
   border: 0;
+}
+
+.content {
+  padding: 0 20px;
 }
 
 ::-webkit-input-placeholder {

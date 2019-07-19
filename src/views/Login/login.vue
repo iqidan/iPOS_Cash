@@ -1,5 +1,9 @@
 <template>
     <div class="login">
+        <Heads
+            :showBtn="true"
+            :select-list="selectList"
+            :placeholder="'搜索商品'"/>
         <label>
             店铺号
             <input type="text" v-model="shopCode">
@@ -18,15 +22,22 @@
 
 <script>
 import api from '@/api';
+import Heads from 'components/Heads';
 
 export default {
     name: 'Login',
+    components: {
+        Heads
+    },
     data() {
         return {
             shopCode: 'A024',
             userCode: 'A02405',
             pwd: 'a123456',
-            isSave: true
+            isSave: true,
+            selectList: [
+                '所有', '未完成'
+            ]
         };
     },
     methods: {
