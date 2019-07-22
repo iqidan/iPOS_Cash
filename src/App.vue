@@ -10,6 +10,7 @@
 
 <script>
 import TabBar from 'components/TabBar';
+import constants from '@/constants/config';
 
 export default {
     components: {
@@ -17,14 +18,14 @@ export default {
     },
     data() {
         return {
-            tabList: ['/cashier', '/order', '/stock', '/setting'],
+            tabList: constants.tabList,
             shown: true
         };
     },
     watch: {
         $route(to) {
             this.shown = Boolean(
-                this.tabList.find(path => to.path === path)
+                this.tabList.find(path => to.path === path.url)
             );
         }
     }

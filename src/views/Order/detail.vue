@@ -38,18 +38,24 @@
                 <span>合计</span>
                 <span class="red">￥6019</span>
             </div>
+            <div class="btns">
+                <mt-button class="btn" type="danger">终止</mt-button>
+                <mt-button class="btn" type="primary">付款</mt-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 // import api from '@/api';
+import { Button } from 'mint-ui';
 import PlainHeader from 'components/PlainHeader';
 
 export default {
     name: 'OrderDetail',
     components: {
-        PlainHeader
+        PlainHeader,
+        MtButton: Button
     },
     data() {
         return {
@@ -142,5 +148,20 @@ export default {
 .detail-content .summary {
     color: #000;
     font-size: 32px;
+    @include border-1px(#c8c7cc, bottom);
+}
+
+.detail .btns {
+    display: flex;
+    @include border-1px(#c8c7cc, bottom);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    .btn {
+        flex: 1;
+        font-size: 32px;
+        &:first-child {
+            margin-right: 20px;
+        }
+    }
 }
 </style>

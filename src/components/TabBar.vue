@@ -21,33 +21,13 @@
 
 <script>
 import { Tabbar, TabItem } from 'mint-ui';
+import constants from '@/constants/config';
 
 export default {
     name: 'TabBar',
     data() {
         return {
-            tabList: [
-                {
-                    url: '/cashier',
-                    icon: 'cart',
-                    name: '收银'
-                },
-                {
-                    url: '/order',
-                    icon: 'order',
-                    name: '订单'
-                },
-                {
-                    url: '/stock',
-                    icon: 'cube',
-                    name: '存货'
-                },
-                {
-                    url: '/setting',
-                    icon: 'setting',
-                    name: '设置'
-                },
-            ],
+            tabList: constants.tabList,
             activeIndex: ''
         };
     },
