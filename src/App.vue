@@ -1,10 +1,10 @@
 <template>
     <div id="content">
         <keep-alive>
-            <router-view class="child-view" v-if="$route.meta.keepAlive"/>
+            <router-view class="child-view" :class="shown ? 'show-tab' : ''" v-if="$route.meta.keepAlive" />
         </keep-alive>
-        <router-view class="child-view" v-if="!$route.meta.keepAlive"/>
-        <TabBar />
+        <router-view class="child-view" :class="shown ? 'show-tab' : ''" v-if="!$route.meta.keepAlive" />
+        <TabBar v-show="shown" />
     </div>
 </template>
 
@@ -14,12 +14,25 @@ import TabBar from 'components/TabBar';
 export default {
     components: {
         TabBar
+    },
+    data() {
+        return {
+            tabList: ['/cashier', '/order', '/stock', '/setting'],
+            shown: true
+        };
+    },
+    watch: {
+        $route(to) {
+            this.shown = Boolean(
+                this.tabList.find(path => to.path === path)
+            );
+        }
     }
 };
 </script>
 
 <style lang="scss">
-@import '~/scss/helper.scss';
+@import "~/scss/helper.scss";
 
 #content {
     width: 100vw;
@@ -42,7 +55,9 @@ export default {
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    padding-bottom: 110px;
+    &.show-tab {
+        padding-bottom: 110px;
+    }
 }
 .slide-left-enter {
     opacity: 0;

@@ -22,7 +22,6 @@ export default {
         };
     },
     created() {
-        console.log(this.$route);
         if (this.$route.meta.title) {
             this.title = this.$route.meta.title;
         }

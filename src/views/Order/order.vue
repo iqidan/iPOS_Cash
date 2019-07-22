@@ -47,18 +47,14 @@
 
 <script>
 import api from '@/api';
-import { Cell, Loadmore, Spinner } from 'mint-ui';
+import { Spinner } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
-import ScrollContainer from 'components/ScrollContainer';
 
 export default {
     name: 'Order',
     components: {
         SearchHeader,
-        ScrollContainer,
-        MtCell: Cell,
-        MtSpinner: Spinner,
-        MtLoadmore: Loadmore
+        MtSpinner: Spinner
     },
     data() {
         return {
@@ -88,9 +84,9 @@ export default {
             });
         },
         async pullDownRefresh() {
-            return await new Promise((resolve, reject) => {
+            return await new Promise((resolve) => {
                 setTimeout(() => {
-                    this.orderList = this.orderList.map(e =>
+                    this.orderList = this.orderList.map(() =>
                         new Date().getTime()
                     );
                     setTimeout(() => {
@@ -102,7 +98,7 @@ export default {
         },
         async pullUpLoadMore() {
             if (this.loading) return;
-            return await new Promise((resolve, reject) => {
+            return await new Promise((resolve) => {
                 this.loading = true;
                 setTimeout(() => {
                     this.orderList.push(
@@ -114,7 +110,6 @@ export default {
                     if (this.orderList.length > 20) {
                         this.allLoaded = true;
                     }
-                    console.log('>>>>>>>> ' + this.orderList.length);
                     resolve('hahhh');
                 }, 3000);
             });

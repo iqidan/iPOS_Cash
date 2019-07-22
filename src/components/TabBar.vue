@@ -1,5 +1,8 @@
 <template>
-    <mt-tabbar fixed v-model="activeIndex" class="tab-bar">
+    <mt-tabbar
+        fixed
+        v-model="activeIndex"
+        class="tab-bar">
         <mt-tabitem
             v-for="item in tabList"
             :key="item.url"
@@ -49,7 +52,7 @@ export default {
         };
     },
     watch: {
-        $route (to, from) {
+        $route (to) {
             const activePath = this.tabList.find(path => to.path.startsWith(path.url)).url;
             if (activePath) {
                 this.activeIndex = activePath;
