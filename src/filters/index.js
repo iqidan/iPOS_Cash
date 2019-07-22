@@ -5,7 +5,7 @@ export default {
      * @param {Date} date [日期对象]
      * @returns {String} - [格式化日期字符串] e.g. '2019-07-19' '2019-07-19 11:09:48'
      */
-    dateFormat(fmt, date = new Date()) {
+    dateFormat(date = new Date(), fmt) {
         let o = {
             'M+': date.getMonth() + 1, //月份
             'd+': date.getDate(), //日

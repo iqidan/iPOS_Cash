@@ -1,5 +1,5 @@
 <template>
-    <mt-header class="head" v-bind="$attrs" :title="title">
+    <mt-header class="head" v-bind="$attrs" :title="title" fixed>
         <div class="back" slot="left" @click="$router.back()">
             <!-- <icon-font icon="scan" /> -->
             <i class="icon-back"/>
@@ -38,6 +38,7 @@ export default {
     height: 100px;
     background-color: #fff;
     @include border-1px(#c8c7cc, bottom);
+    position: fixed;
     color: $color-default;
     .back {
         display: flex;
