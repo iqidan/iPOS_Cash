@@ -1,6 +1,7 @@
 @import './mint-ui';
 @import './var';
 @import './helper';
+@import '../fonts/iconfont.css';
 
 html {
   font-family: 'PingFang SC', 'Lantinghei SC', 'Microsoft YaHei', arial, '\5b8b\4f53', sans-serif, tahoma;
@@ -27,4 +28,8 @@ input {
 
 ::-webkit-input-placeholder {
   color: #707070;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }

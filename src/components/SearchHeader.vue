@@ -1,6 +1,7 @@
 <template>
     <header class="heads content">
-        <icon-font class="icon" icon="scan" />
+        <!-- <icon-font class="icon" icon="scan" /> -->
+        <a href="javascript:;" class="icon-scanner" />
         <search v-bind="$attrs" v-on="$listeners" class="search" />
         <div v-if="showBtn" class="cancel center">
             取消
@@ -38,9 +39,14 @@ export default {
     @include border-1px(#c8c7cc, bottom);
 }
 
-.icon {
+.icon-scanner {
     padding-right: 10px;
-    width: 60px;
+    font-size: 60px;
+    color: #5c5c5c;
+    text-decoration: none;
+    &::before {
+        text-decoration: none;
+    }
 }
 
 .search {

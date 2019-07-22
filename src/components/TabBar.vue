@@ -2,13 +2,16 @@
     <mt-tabbar fixed v-model="activeIndex" class="tab-bar">
         <mt-tabitem
             v-for="item in tabList"
-            :key="item"
-            :id="item"
+            :key="item.url"
+            :id="item.url"
             class="bar-item"
-            @click.native="changeTab(item)"
+            @click.native="changeTab(item.url)"
         >
-            <icon-font slot="icon" class="icon" icon="scan" />
-            {{ item }}
+            <!-- <icon-font slot="icon" class="icon" icon="scan" /> -->
+            <div class="tab-inner">
+                <i :class="`icon-${item.icon}`"/>
+                <span>{{ item.name }}</span>
+            </div>
         </mt-tabitem>
     </mt-tabbar>
 </template>
@@ -20,13 +23,34 @@ export default {
     name: 'TabBar',
     data() {
         return {
-            tabList: ['/cashier', '/order', '/stock', '/setting'],
+            tabList: [
+                {
+                    url: '/cashier',
+                    icon: 'cart',
+                    name: '收银'
+                },
+                {
+                    url: '/order',
+                    icon: 'order',
+                    name: '订单'
+                },
+                {
+                    url: '/stock',
+                    icon: 'cube',
+                    name: '存货'
+                },
+                {
+                    url: '/setting',
+                    icon: 'setting',
+                    name: '设置'
+                },
+            ],
             activeIndex: ''
         };
     },
     watch: {
         $route (to, from) {
-            const activePath = this.tabList.find(path => to.path.startsWith(path));
+            const activePath = this.tabList.find(path => to.path.startsWith(path.url)).url;
             if (activePath) {
                 this.activeIndex = activePath;
             }
@@ -49,6 +73,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~/scss/helper.scss";
+
 .tab-bar {
     font-size: 40px;
     z-index: 20;
@@ -58,5 +84,15 @@ export default {
 .bar-item {
     display: flex;
     flex-direction: column
+}
+
+.tab-inner {
+    display: flex;
+    flex-direction: column;
+    font-size: 28px;
+    [class^="icon-"] {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
 }
 </style>
