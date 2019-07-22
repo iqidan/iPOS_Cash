@@ -1,6 +1,6 @@
 <template>
     <div class="cashier">
-        <Heads
+        <search-header
             @changeFilter="selectFilterItem"
             :select-list="selectList"
             :placeholder="'搜索商品'"/>
@@ -22,12 +22,12 @@
 
 <script>
 import api from '@/api';
-import Heads from 'components/Heads';
+import SearchHeader from 'components/SearchHeader';
 
 export default {
     name: 'Cashier',
     components: {
-        Heads
+        SearchHeader
     },
     data() {
         return {

@@ -12,7 +12,7 @@
 import Search from './_search';
 
 export default {
-    name: 'Heads',
+    name: 'SearchHeader',
     components: {
         Search
     },

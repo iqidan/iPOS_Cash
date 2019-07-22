@@ -1,16 +1,18 @@
 <template>
     <div class="detail">
+        <plain-header />
         <h3>detail: {{orderId}}</h3>
     </div>
 </template>
 
 <script>
 import api from '@/api';
-import Heads from 'components/Heads';
+import PlainHeader from 'components/PlainHeader';
 
 export default {
     name: 'OrderDetail',
     components: {
+        PlainHeader
     },
     data() {
         return {
