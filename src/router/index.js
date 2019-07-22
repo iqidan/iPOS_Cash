@@ -20,7 +20,7 @@ const router = new Router({
             },
             component: Login
         },
-        // Cashier
+        // Cashier(首页)
         {
             path: '/cashier',
             name: 'Cashier',
@@ -35,7 +35,7 @@ const router = new Router({
             name: 'Test',
             component: () => import('views/Cashier/test')
         },
-        // Order
+        // Order(订单)
         {
             path: '/order',
             name: 'Order',
@@ -48,6 +48,15 @@ const router = new Router({
                 title: '订单详情'
             },
             component: () => import('views/Order/detail')
+        },
+        // settle(结算)
+        {
+            path: '/settle',
+            name: 'Settle',
+            meta: {
+                title: '结算'
+            },
+            component: () => import('views/Settle/settle')
         }
     ]
 });

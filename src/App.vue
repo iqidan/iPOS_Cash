@@ -40,7 +40,6 @@ export default {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: $color-bg;
 }
 
 .child-view {
@@ -50,10 +49,10 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    background-color: $color-bg;
     transition-property: transform, opacity;
     transition-duration: 0.6s;
     transition-timing-function: ease-out;
-    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     &.show-tab {

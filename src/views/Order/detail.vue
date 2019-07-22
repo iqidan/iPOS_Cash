@@ -3,7 +3,7 @@
         <plain-header />
         <div class="detail-content">
             <div class="caption">订单信息</div>
-            <div class="order-detail">
+            <div class="order-detail bd1">
                 <span class="flex-1">订单编号：A024002019070513270</span>
                 <span class="flex-half">店铺：A024</span>
                 <span class="flex-half">收银员：(null)admin</span>
@@ -17,7 +17,7 @@
             <div class="caption">商品信息</div>
             <div class="goods-list">
                 <ul>
-                    <li class="good" v-for="item in [1,2,3,5,9]" :key="item">
+                    <li class="good bd1" v-for="item in [1,2,3,5,9]" :key="item">
                         <p>
                             <span>围巾</span>
                             <span class="red">￥791</span>
@@ -30,17 +30,17 @@
                 </ul>
             </div>
             <div class="caption">结算信息</div>
-            <div class="currency">
+            <div class="currency bd1">
                 <span>现金支付</span>
                 <span class="red">￥6019</span>
             </div>
-            <div class="summary">
+            <div class="summary bd1">
                 <span>合计</span>
                 <span class="red">￥6019</span>
             </div>
-            <div class="btns">
+            <div class="btns bd1">
                 <mt-button class="btn" type="danger">终止</mt-button>
-                <mt-button class="btn" type="primary">付款</mt-button>
+                <mt-button class="btn" type="primary" @click="pay">付款</mt-button>
             </div>
         </div>
     </div>
@@ -63,6 +63,9 @@ export default {
         };
     },
     methods: {
+        pay() {
+            this.$router.push('/settle');
+        }
     },
     created() {
         // this.getOrders();
@@ -82,6 +85,13 @@ export default {
 .red {
     color: red;
 }
+.bd1 {
+    background-color: #fff;
+    @include border-1px(#c8c7cc, bottom);
+    &:last-child {
+        margin-bottom: 1px;
+    }
+}
 
 .detail {
     padding-top: 100px;
@@ -89,7 +99,7 @@ export default {
 .detail-content {
     overflow: auto;
     padding-bottom: 60px;
-    background-color: #f5f5f5;
+    // background-color: #f5f5f5;
 }
 .detail-content > div {
     padding: 0 30px;
@@ -99,7 +109,7 @@ export default {
     height: 70px;
     line-height: 70px;
     background-color: #eee;
-    @include border-1px(#c8c7cc, top, bottom);
+    @include border-1px(#c8c7cc, bottom);
 }
 .detail .order-detail {
     display: flex;
@@ -119,9 +129,7 @@ export default {
     padding: 0 30px;
     flex-direction: column;
     justify-content: center;
-    &:not(:last-of-type) {
-        @include border-1px(#c8c7cc, bottom);
-    }
+    
     p {
         display: flex;
         justify-content: space-between;
@@ -143,17 +151,14 @@ export default {
     line-height: 100px;
     color: #8e9093;
     justify-content: space-between;
-    @include border-1px(#c8c7cc, bottom);
 }
 .detail-content .summary {
     color: #000;
     font-size: 32px;
-    @include border-1px(#c8c7cc, bottom);
 }
 
 .detail .btns {
     display: flex;
-    @include border-1px(#c8c7cc, bottom);
     padding-top: 20px;
     padding-bottom: 20px;
     .btn {

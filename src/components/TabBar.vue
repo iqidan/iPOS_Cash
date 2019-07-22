@@ -33,9 +33,9 @@ export default {
     },
     watch: {
         $route (to) {
-            const activePath = this.tabList.find(path => to.path.startsWith(path.url)).url;
+            const activePath = this.tabList.find(path => to.path.startsWith(path.url));
             if (activePath) {
-                this.activeIndex = activePath;
+                this.activeIndex = activePath.url;
             }
         }
     },
