@@ -42,7 +42,6 @@ export default {
     flex: 1;
     padding-top: 100px;
     font-size: 32px;
-    color: #8e9093;
     .cell {
         @include border-1px(#c8c7cc, top, bottom);
         &:nth-child(1) {
