@@ -4,25 +4,25 @@
  * @ext: 文件扩展名，默认 .png
 */
 @mixin bg($name, $imgMap: ()) {
-  $tmpPre: map-get($imgMap, pre);
-  $tmpExt: map-get($imgMap, ext);
-  $isActive: map-get($imgMap, isActive);
+    $tmpPre: map-get($imgMap, pre);
+    $tmpExt: map-get($imgMap, ext);
+    $isActive: map-get($imgMap, isActive);
 
-  $pre: if($tmpPre, $tmpPre, '../');
-  $ext: if($tmpExt, $tmpExt, '.png');
-  $name: if($isActive, $name + '_active', $name);
+    $pre: if($tmpPre, $tmpPre, '../');
+    $ext: if($tmpExt, $tmpExt, '.png');
+    $name: if($isActive, $name + '_active', $name);
 
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 0 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 0 0;
 
-  background-image: url($pre+'assets/img/'+$name+$ext);
-  @media (-webkit-min-device-pixel-ratio: 2) {
-    background-image: url($pre+'assets/img/'+$name+'@2x'+$ext);
-  }
-  @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
-    background-image: url($pre+'assets/img/'+$name+'@3x'+$ext);
-  }
+    background-image: url($pre+'assets/img/'+$name+$ext);
+    @media (-webkit-min-device-pixel-ratio: 2) {
+        background-image: url($pre+'assets/img/'+$name+'@2x'+$ext);
+    }
+    @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+        background-image: url($pre+'assets/img/'+$name+'@3x'+$ext);
+    }
 }
 
 /* 兼容retina屏1px边框
@@ -31,29 +31,33 @@
  * @ position: border位置，写法类似js中的 (...args)
 */
 @mixin border-1px($color: #000, $position...) {
-  position: relative;
-  &::after {
-    content: ' ';
-    position: absolute;
-    transform-origin: 0 0;
+    position: relative;
 
-    @if length($position) > 1 {
-      left: 0;
-      top: 0;
-      width: 200%;
-      height: 200%;
-      transform: scale(0.5);
-    } @else {
-      left: 0;
-      bottom: 0;
-      #{$position}: 0;
-      width: 100%;
-      transform: scaleY(0.5);
+    &::after {
+        content: ' ';
+        position: absolute;
+        transform-origin: 0 0;
+
+        @if length($position) > 1 {
+            width: 200%;
+            height: 200%;
+            transform: scale(0.5);
+        } @else if index(right left, #{$position}) != null {
+            top: 0;
+            height: 200%;
+            width: 1px;
+            transform: scale(0.5);
+        } @else if index(bottom top, #{$position}) != null {
+            left: 0;
+            height: 1px;
+            width: 200%;
+            transform: scale(0.5);
+        }
+        box-sizing: border-box;
+        border-radius: inherit;
+        @each $p in $position {
+            #{$p}: 0;
+            border-#{$p}: 1px solid $color;
+        }
     }
-    box-sizing: border-box;
-    border-radius: inherit;
-    @each $p in $position {
-      border-#{$p}: 1px solid $color;
-    }
-  }
 }

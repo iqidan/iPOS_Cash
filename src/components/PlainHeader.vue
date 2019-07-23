@@ -3,7 +3,7 @@
         <div class="back" slot="left" @click="$router.back()">
             <!-- <icon-font icon="scan" /> -->
             <i class="icon-back"/>
-            返回
+            <slot name="back">返回</slot>
         </div>
     </mt-header>
 </template>
@@ -42,7 +42,7 @@ export default {
     .back {
         display: flex;
         height: 100%;
-        font-size: 32px;
+        font-size: 34px;
         .icon-back {
             font-size: 40px;
             font-weight: bold;

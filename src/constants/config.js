@@ -26,5 +26,5 @@ export default {
             icon: 'setting',
             name: '设置'
         },
-    ],
+    ]
 }
