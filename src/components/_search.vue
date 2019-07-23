@@ -55,6 +55,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~/scss/helper.scss";
+
 .search {
     display: flex;
     font-size: 28px;
@@ -74,9 +76,7 @@ export default {
     }
     i {
         margin-top: 12px;
-        display: block;
-        border: 10px solid transparent;
-        border-top-color: #999;
+        @include triangle(10px, #999, top);
     }
 }
 

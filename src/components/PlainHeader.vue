@@ -1,10 +1,10 @@
 <template>
     <mt-header class="head" v-bind="$attrs" :title="title" fixed>
-        <div class="back" slot="left" @click="$router.back()">
-            <!-- <icon-font icon="scan" /> -->
+        <div class="back" slot="left" @click="$router.back()" v-if="showBack">
             <i class="icon-back"/>
             <slot name="back">返回</slot>
         </div>
+        <slot slot="right" name="right"></slot>
     </mt-header>
 </template>
 
@@ -15,6 +15,12 @@ export default {
     name: 'PlainHeader',
     components: {
         MtHeader: Header
+    },
+    props: {
+        showBack: {
+            type: Boolean,
+            default: true
+        }
     },
     data() {
         return {
@@ -39,10 +45,10 @@ export default {
     @include border-1px(#c8c7cc, bottom);
     position: fixed;
     color: $color-default;
+    font-size: 34px;
     .back {
         display: flex;
         height: 100%;
-        font-size: 34px;
         .icon-back {
             font-size: 40px;
             font-weight: bold;
@@ -51,7 +57,6 @@ export default {
     /deep/ .mint-header-title {
         color: #000;
         font-weight: bold;
-        font-size: 34px;
         height: 100px;
         line-height: 100px;
     }

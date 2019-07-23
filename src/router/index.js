@@ -57,6 +57,32 @@ const router = new Router({
                 title: '结算'
             },
             component: () => import('views/Settle/settle')
+        },
+        // stock(存货)
+        {
+            path: '/stock',
+            name: 'Stock',
+            meta: {
+                title: '存货'
+            },
+            component: () => import('views/Stock/stock')
+        },
+        // inventory(盘点单)
+        {
+            path: '/inventory',
+            name: 'Inventory',
+            meta: {
+                title: '盘点单'
+            },
+            component: () => import('views/Inventory/inventory')
+        },
+        {
+            path: '/add_inventory',
+            name: 'AddInventory',
+            meta: {
+                title: '新增盘点单'
+            },
+            component: () => import('views/Inventory/addInventoryOrder')
         }
     ]
 });

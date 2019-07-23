@@ -32,6 +32,8 @@
 */
 @mixin border-1px($color: #000, $position...) {
     position: relative;
+    $rl: right left;
+    $bt: bottom top;
 
     &::after {
         content: ' ';
@@ -42,22 +44,40 @@
             width: 200%;
             height: 200%;
             transform: scale(0.5);
-        } @else if index(right left, #{$position}) != null {
-            top: 0;
-            height: 200%;
-            width: 1px;
-            transform: scale(0.5);
-        } @else if index(bottom top, #{$position}) != null {
             left: 0;
+            top: 0;
+            @each $p in $position {
+                border-#{$p}: 1px solid $color;
+            }
+        } @else if index($rl, #{$position}) != null {
+            top: 0;
+            #{$position}: 0;
+            width: 1px;
+            height: 200%;
+            transform: scale(0.5);
+            border-#{$position}: 1px solid $color;
+        } @else if index($bt, #{$position}) != null {
+            left: 0;
+            #{$position}: 0;
             height: 1px;
             width: 200%;
             transform: scale(0.5);
+            border-#{$position}: 1px solid $color;
         }
         box-sizing: border-box;
         border-radius: inherit;
-        @each $p in $position {
-            #{$p}: 0;
-            border-#{$p}: 1px solid $color;
-        }
     }
+}
+
+/** 
+ * css画三角形
+ *
+ * $size: 三角形底边长度
+ * $color: 三角形颜色
+ * $position: 三角形顶角朝向
+*/
+@mixin triangle($size, $color, $position) {
+    display: inline-block;
+    border: $size solid transparent;
+    border-#{$position}-color: $color;
 }
