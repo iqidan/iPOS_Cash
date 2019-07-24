@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import api from '@/api';
+// import api from '@/api';
 import SearchHeader from 'components/SearchHeader';
 
 export default {

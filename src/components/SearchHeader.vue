@@ -1,7 +1,6 @@
 <template>
     <header class="heads content">
-        <!-- <icon-font class="icon" icon="scan" /> -->
-        <a href="javascript:;" class="icon-scanner" />
+        <scanner class="scanner"/>
         <search v-bind="$attrs" v-on="$listeners" class="search" />
         <div v-if="showBtn" class="cancel center">
             取消
@@ -11,11 +10,13 @@
 
 <script>
 import Search from './_search';
+import Scanner from './Scanner';
 
 export default {
     name: 'SearchHeader',
     components: {
-        Search
+        Search,
+        Scanner
     },
     props: {
         showBtn: {
@@ -39,14 +40,10 @@ export default {
     @include border-1px(#c8c7cc, bottom);
 }
 
-.icon-scanner {
+.scanner {
     padding-right: 10px;
     font-size: 60px;
     color: #5c5c5c;
-    text-decoration: none;
-    &::before {
-        text-decoration: none;
-    }
 }
 
 .search {

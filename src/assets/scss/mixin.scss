@@ -30,44 +30,64 @@
  * @color: border颜色
  * @ position: border位置，写法类似js中的 (...args)
 */
+/* 伪元素 scale方案 (缺陷：伪元素会遮住内容) */
 @mixin border-1px($color: #000, $position...) {
-    position: relative;
-    $rl: right left;
-    $bt: bottom top;
+    @each $p in $position {
+        border-#{$p}: 1px solid $color;
+    }
+    @media screen and (-webkit-min-device-pixel-ratio: 2){
+        border: 0;
+        position: relative;
+        $rl: right left;
+        $bt: bottom top;
 
-    &::after {
-        content: ' ';
-        position: absolute;
-        transform-origin: 0 0;
+        &::after {
+            content: ' ';
+            position: absolute;
+            transform-origin: 0 0;
 
-        @if length($position) > 1 {
-            width: 200%;
-            height: 200%;
-            transform: scale(0.5);
-            left: 0;
-            top: 0;
-            @each $p in $position {
-                border-#{$p}: 1px solid $color;
+            @if length($position) > 1 {
+                width: 200%;
+                height: 200%;
+                transform: scale(0.5);
+                left: 0;
+                top: 0;
+                @each $p in $position {
+                    border-#{$p}: 1px solid $color;
+                }
+            } @else if index($rl, #{$position}) != null {
+                top: 0;
+                #{$position}: 0;
+                width: 1px;
+                height: 200%;
+                transform: scale(0.5);
+                border-#{$position}: 1px solid $color;
+            } @else if index($bt, #{$position}) != null {
+                left: 0;
+                #{$position}: 0;
+                height: 1px;
+                width: 200%;
+                transform: scale(0.5);
+                border-#{$position}: 1px solid $color;
             }
-        } @else if index($rl, #{$position}) != null {
-            top: 0;
-            #{$position}: 0;
-            width: 1px;
-            height: 200%;
-            transform: scale(0.5);
-            border-#{$position}: 1px solid $color;
-        } @else if index($bt, #{$position}) != null {
-            left: 0;
-            #{$position}: 0;
-            height: 1px;
-            width: 200%;
-            transform: scale(0.5);
-            border-#{$position}: 1px solid $color;
+            box-sizing: border-box;
+            border-radius: inherit;
         }
-        box-sizing: border-box;
-        border-radius: inherit;
     }
 }
+/* border-image 方案 */
+// @mixin border-1px($color: #000, $position...) {
+//     @each $p in $position {
+//         border-#{$p}: 1px solid $color;
+//     }
+//     @media screen and (-webkit-min-device-pixel-ratio: 2) {
+//         border: 0;
+//         @each $p in $position {
+//             border-#{$p}: 1px solid transparent;
+//             border-#{$p}-image: linear-gradient(to #{$p}, $color 50%, transparent 50%) 0 0 2 0;
+//         }
+//     }
+// }
 
 /** 
  * css画三角形

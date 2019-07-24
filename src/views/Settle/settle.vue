@@ -96,7 +96,6 @@ export default {
 }
 .settle {
     flex: 1;
-    padding-top: 100px;
     position: relative;
 }
 
@@ -138,7 +137,7 @@ export default {
     left: 0;
     bottom: 0;
     @include border-1px(rgba(0, 0, 0, 0.3), top);
-    position: absolute;
+    position: absolute !important;
     .summary {
         flex: 1;
         display: flex;

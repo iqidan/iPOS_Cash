@@ -2,7 +2,7 @@
     <div class="stock">
         <plain-header :showBack="false" />
         <div class="stock-content">
-            <router-link to="/stock_search" tag="div">
+            <router-link to="/stock_search" tag="div" class="cell-wrap">
                 <mt-cell
                     class="cell"
                     is-link
@@ -10,7 +10,7 @@
                     <i class="icon-search" slot="icon" />
                 </mt-cell>
             </router-link>
-            <router-link to="inventory" tag="div">
+            <router-link to="inventory" tag="div" class="cell-wrap">
                 <mt-cell
                     class="cell"
                     is-link
@@ -40,8 +40,11 @@ export default {
 
 .stock-content {
     flex: 1;
-    padding-top: 100px;
+    padding-top: 30px;
     font-size: 32px;
+    .cell-wrap {
+        background-color: #fff;
+    }
     .cell {
         @include border-1px(#c8c7cc, top, bottom);
         &:nth-child(1) {

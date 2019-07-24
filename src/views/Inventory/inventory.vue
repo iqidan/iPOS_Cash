@@ -60,10 +60,12 @@ export default {
 }
 .inventory {
     flex: 1;
-    padding-top: 100px;
     color: #8e9093;
     font-size: 28px;
     line-height: 42px;
+    .inventory-content {
+        flex: 1;
+    }
     li {
         height: 250px;
         display: flex;

@@ -94,7 +94,6 @@ export default {
 }
 
 .detail {
-    padding-top: 100px;
 }
 .detail-content {
     overflow: auto;

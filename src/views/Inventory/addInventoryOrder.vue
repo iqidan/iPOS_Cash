@@ -70,8 +70,8 @@ export default {
 .content {
     padding: 0 30px;
 }
-.add-inventory {
-    padding-top: 100px;
+.add-inventory-content {
+    flex: 1;
 }
 .order-info {
     font-size: 32px;
@@ -117,7 +117,7 @@ export default {
     width: 100%;
     justify-content: space-evenly;
     @include border-1px(#c8c7cc, top);
-    position: absolute;
+    position: absolute !important;
     padding: 20px 0;
     background-color: #fff;
     button {

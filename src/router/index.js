@@ -67,6 +67,14 @@ const router = new Router({
             },
             component: () => import('views/Stock/stock')
         },
+        {
+            path: '/stock_search',
+            name: 'StockSearch',
+            meta: {
+                title: '库存查询'
+            },
+            component: () => import('views/Stock/stockSearch')
+        },
         // inventory(盘点单)
         {
             path: '/inventory',
