@@ -62,6 +62,8 @@ export default {
     font-size: 40px;
     z-index: 20;
     height: 110px;
+    @include border-1px(#c8c7cc, top);
+    position: fixed;
 }
 
 .bar-item {

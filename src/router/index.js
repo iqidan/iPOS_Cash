@@ -99,6 +99,15 @@ const router = new Router({
                 title: '盘点单详情'
             },
             component: () => import('views/Inventory/detail')
+        },
+        // setting (设置)
+        {
+            path: '/setting',
+            name: 'AddInventory',
+            meta: {
+                title: '设置'
+            },
+            component: () => import('views/Setting/setting')
         }
     ]
 });
