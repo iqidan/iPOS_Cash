@@ -85,12 +85,20 @@ const router = new Router({
             component: () => import('views/Inventory/inventory')
         },
         {
-            path: '/add_inventory',
+            path: '/inventory/add',
             name: 'AddInventory',
             meta: {
                 title: '新增盘点单'
             },
-            component: () => import('views/Inventory/addInventoryOrder')
+            component: () => import('views/Inventory/add')
+        },
+        {
+            path: '/inventory/detail',
+            name: 'AddInventory',
+            meta: {
+                title: '盘点单详情'
+            },
+            component: () => import('views/Inventory/detail')
         }
     ]
 });
