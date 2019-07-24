@@ -108,6 +108,14 @@ const router = new Router({
                 title: '设置'
             },
             component: () => import('views/Setting/setting')
+        },
+        {
+            path: '/test',
+            name: 'AddInventory',
+            meta: {
+                title: '设置'
+            },
+            component: () => import('views/test')
         }
     ]
 });
