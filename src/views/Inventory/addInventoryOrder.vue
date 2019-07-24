@@ -20,11 +20,11 @@
                 </li>
                 <li class="content">
                     <span>区位</span>
-                    <input type="text">
+                    <input class="l" type="text">
                 </li>
                 <li class="content">
                     <span>备注</span>
-                    <input type="text">
+                    <input class="l" type="text">
                 </li>
             </ul>
 
@@ -90,6 +90,11 @@ export default {
         .l {
             display: inline-block;
             padding-left: 40px;
+        }
+        input {
+            flex: 1;
+            font-size: inherit;
+            align-self: stretch;
         }
     }
     .select-order {
