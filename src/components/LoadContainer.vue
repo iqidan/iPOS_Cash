@@ -10,13 +10,6 @@
             infinite-scroll-distance="50"
             infinite-scroll-disabled="noMore"
         >
-            <!-- <li
-                v-bind="$attrs.options.item"
-                v-for="item in list"
-                :key="item"
-            >
-                {{item}}
-            </li> -->
             <slot />
         </ul>
 
