@@ -5,10 +5,7 @@
             :select-list="selectList"
             :placeholder="'请输入小票单号'"
         />
-        <ul
-            class="list-wrap"
-            infinite-scroll-disabled="allLoaded"
-            v-infinite-scroll="pullUpLoadMore">
+        <load-container class="list-wrap">
             <router-link
                 tag="li"
                 class="cell"
@@ -29,32 +26,20 @@
                     </div>
                 </div>
             </router-link>
-            <li class="load-status">
-                <div class="loading" v-show="loading&&!allLoaded">
-                    <mt-spinner
-                        class="circle"
-                        type="fading-circle"
-                        color="#488aff"
-                        :size="24">
-                    </mt-spinner>
-                    <span class="text">加载中...</span>
-                </div>
-                <span v-show="allLoaded" class="no-more">没有更多数据</span>
-            </li>
-        </ul>
-        </div>
+        </load-container>
+    </div>
 </template>
 
 <script>
 import api from '@/api';
-import { Spinner } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
+import LoadContainer from 'components/LoadContainer';
 
 export default {
     name: 'Order',
     components: {
         SearchHeader,
-        MtSpinner: Spinner
+        LoadContainer
     },
     data() {
         return {
@@ -64,54 +49,33 @@ export default {
                 page_size: 10
             },
             selectList: ['所有', '未完成'],
-            loading: false,
-            allLoaded: false,
-            orderList: [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+
+            orderList: []
         };
     },
     methods: {
         getOrders() {
-            this.loading = true;
             return api.get_order_list(this.filters).then(res => {
-                this.loading = false;
-                this.orderList = [...this.orderList, ...res.data.data];
                 this.filters.page++;
                 if (this.orderList.length >= res.data.count) {
                     this.allLoaded = true;
                 }
-            }).catch(() => {
-                this.loading = false;
             });
         },
-        async pullDownRefresh() {
-            return await new Promise((resolve) => {
+        pullRefresh() {
+            return new Promise((resolve) => {
                 setTimeout(() => {
-                    this.orderList = this.orderList.map(() =>
-                        new Date().getTime()
-                    );
-                    setTimeout(() => {
-                        this.$refs.loadMore.onTopLoaded();
-                    }, 1000);
-                    resolve('hahhh');
-                }, 3000);
+                    this.orderList = new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000));
+                    resolve();
+                }, 2000);
             });
         },
-        async pullUpLoadMore() {
-            if (this.loading) return;
-            return await new Promise((resolve) => {
-                this.loading = true;
+        loadMore() {
+            return new Promise((resolve) => {
                 setTimeout(() => {
-                    this.orderList.push(
-                        new Date().getTime(),
-                        new Date().getTime(),
-                        new Date().getTime()
-                    );
-                    this.loading = false;
-                    if (this.orderList.length > 20) {
-                        this.allLoaded = true;
-                    }
-                    resolve('hahhh');
-                }, 3000);
+                    this.orderList.push(...new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000)));
+                    resolve();
+                }, 2000);
             });
         }
     },
@@ -157,32 +121,5 @@ export default {
         }
     }
 }
-.load-status {
-    display: flex;
-    height: 140px;
-    text-align: center;
-    .loading {
-        flex: 1;
-        display: flex;
-        color: $color-default;
-        align-items: center;
-        justify-content: center;
-        .circle {
-            display: flex;
-        }
-    }
-    .text {
-        margin-left: 20px;
-    }
-    /deep/ .mint-spinner-fading-circle {
-        display: inline-block;
-    }
-    .no-more {
-        color: #999;
-        height: 140px;
-        line-height: 140px;
-        flex: 1;
-        text-align: center;
-    }
-}
+
 </style>

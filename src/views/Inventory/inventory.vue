@@ -4,7 +4,7 @@
             <span class="add-order" slot="right" @click="toAdd()">新增</span>
         </plain-header>
         
-        <ul class="inventory-content">
+        <load-container class="inventory-content">
             <router-link
                 tag="li"
                 to="detail"
@@ -31,28 +31,46 @@
                     </p>
                 </info>
             </router-link>
-        </ul>
+        </load-container>
     </div>
 </template>
 
 <script>
 import PlainHeader from 'components/PlainHeader';
 import Info from './components/OrderInfo';
+import LoadContainer from 'components/LoadContainer';
 
 export default {
     name: 'Inventory',
     components: {
         Info,
-        PlainHeader
+        PlainHeader,
+        LoadContainer
     },
     data() {
         return {
-            orderList: [1,2,3,5]
+            orderList: []
         }
     },
     methods: {
         toAdd() {
             this.$router.push('/inventory/add');
+        },
+        pullRefresh() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    this.orderList = new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000));
+                    resolve();
+                }, 2000);
+            });
+        },
+        loadMore() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    this.orderList.push(...new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000)));
+                    resolve();
+                }, 2000);
+            });
         }
     }
 }
