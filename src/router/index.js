@@ -94,7 +94,7 @@ const router = new Router({
         },
         {
             path: '/inventory/detail',
-            name: 'AddInventory',
+            name: 'InventoryDetail',
             meta: {
                 title: '盘点单详情'
             },
@@ -103,7 +103,7 @@ const router = new Router({
         // setting (设置)
         {
             path: '/setting',
-            name: 'AddInventory',
+            name: 'Setting',
             meta: {
                 title: '设置'
             },
