@@ -7,6 +7,9 @@ module.exports = {
                 utils: '@/utils',
                 views: '@/views'
             }
+        },
+        devServer: {
+            open: true
         }
     }
 };
