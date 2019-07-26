@@ -11,7 +11,7 @@ import { Toast, Indicator } from 'mint-ui';
 function generateParams() {
     // TODO:
     const token =
-        'QTAyNDA1X2QwZWE3OTQ1MjRjOTRhNzI5NTE4ZDIxMGJlOGU4OTIzX2ExMjM0NTY';
+        'QTAyNDA1XzFhMzM3ZWMzZWY4NDQwYTk4OWE2YjZlOWY1ZjYwYmVlX2ExMjM0NTY=';
     const { version, key, password, no_exchange_jsdm } = config;
 
     const date = new Date();

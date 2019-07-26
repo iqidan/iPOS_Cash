@@ -2,14 +2,15 @@
     <mt-popup
         class="select-pop"
         v-model="popupVisible"
+        :closeOnClickModal="closeOnClickModal"
         popup-transition="popup-fade"
     >
-        <div class="pop-title">任务单号</div>
+        <div class="pop-title">{{title}}</div>
         <mt-radio
             class="item-list"
             v-model="orderChecked"
             align="right"
-            :options="orderList"
+            :options="shownList"
         />
         <div class="btns">
             <mt-button
@@ -18,13 +19,14 @@
                 type="default"
                 @click="popupVisible = false"
             >取消</mt-button>
-            <mt-button class="btn" type="default">确定</mt-button>
+            <mt-button class="btn" type="default" @click="sure">确定</mt-button>
         </div>
     </mt-popup>
 </template>
 
 <script>
 import { Popup, Radio, Button } from 'mint-ui';
+import utils from '@/utils';
 
 export default {
     name: 'SelectorActions',
@@ -34,13 +36,43 @@ export default {
         MtPopup: Popup
     },
     props: {
-        showCancel: {
+        title: {
+            type: String,
+            default: () => ''
+        },
+        closeOnClickModal: {
             type: Boolean,
             default: () => true
+        },
+        showCancel: {
+            type: Boolean,
+            default: () => false
         },
         orderList: {
             type: Array,
             default: () => []
+        },
+        // 对象中对应显示名称的key值
+        labelKey: {
+            type: String,
+            required: true
+        },
+        // 对应value的key值
+        valueKey: {
+            type: String,
+            required: true
+        }
+    },
+    computed: {
+        // 显示列表数据
+        shownList () {
+            return this.orderList.map(item => {
+                return {
+                    value: utils.getKey(item, this.valueKey) + '',
+                    label: utils.getKey(item, this.labelKey) + '',
+                    origin: item
+                }
+            });
         }
     },
     data() {
@@ -50,11 +82,19 @@ export default {
         };
     },
     created() {
-        this.orderChecked = this.orderList[0];
+        if (this.shownList[0]) {
+            this.orderChecked = utils.getKey(this.orderList[0], this.valueKey) + ''
+        } else {
+            this.orderChecked = '';
+        }
     },
     methods: {
-        toggle () {
-            this.popupVisible = !this.popupVisible;
+        show () {
+            this.popupVisible = true;
+        },
+        sure () {
+            this.$emit('sure', this.orderList.find(e => utils.getKey(e, this.valueKey) == this.orderChecked));
+            this.popupVisible = false;
         }
     }
 };
@@ -81,6 +121,8 @@ export default {
     .item-list {
         font-size: 28px;
         @include border-1px(#b8bbbf, bottom);
+        overflow-y: auto;
+        max-height: 400px;
     }
     .btns {
         display: flex;

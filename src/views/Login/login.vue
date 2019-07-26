@@ -31,7 +31,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['login']),
+        ...mapActions(['login', 'showGuideListPopup']),
         doLogin() {
             const canLogin = this.isInfoCorrect();
             if (!canLogin) return;
@@ -41,6 +41,7 @@ export default {
                 password: this.pwd
             }).then(shopConfig => {
                 this.$router.replace('/cashier');
+                this.showGuideListPopup({ty:2,shop_code: this.shopCode});
             }).catch(err => {
                 if (err) {
                     this.$toast(err.message + err.status);

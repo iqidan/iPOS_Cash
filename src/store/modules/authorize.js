@@ -27,20 +27,17 @@ const formatShopConfig = (config = {}) => {
 
 const state = {
     isSave: false,
-    shopConfig: {}
+    token: ''
 };
 
 // 一般用来过滤state中数据，类似 computed 生命周期
 const getters = {
-    token(state) {
-        return state.shopConfig.token;
-    }
 };
 
 // mutations 只能存在同步代码，用来改变 state 数据
 const mutations = {
-    setShopConfig(state, shopConfig) {
-        state.shopConfig = shopConfig;
+    setToken(state, token) {
+        state.token = token;
     }
 };
 
@@ -48,7 +45,10 @@ const mutations = {
 const actions = {
     login({ commit }, param) {
         return api.login(param).then(res => {
-            commit('setShopConfig', formatShopConfig(res));
+            const config = formatShopConfig(res);
+            commit('setToken', config.token);
+            commit('setShopConfig', config);
+            commit('setBrandList', config.brand);
         });
     }
 };
