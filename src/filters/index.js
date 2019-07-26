@@ -1,4 +1,6 @@
-export default {
+import Vue from 'vue';
+
+const filters = {
     /**
      * 
      * @param {String} fmt [日期格式] e.g. 'yyyy-MM-dd' 'yyyy-MM-dd hh:mm:ss'
@@ -72,3 +74,7 @@ export default {
         return res;
     }
 };
+
+for (let k in filters) {
+    Vue.filter(k, filters[k]);
+}

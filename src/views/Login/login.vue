@@ -12,12 +12,13 @@
             密码
             <input type="password" v-model="pwd">
         </label>
-        <button @click="login()">登录</button>
+        <button @click="doLogin()">登录</button>
     </div>
 </template>
 
 <script>
 import api from '@/api';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     name: 'Login',
@@ -30,51 +31,21 @@ export default {
         };
     },
     methods: {
-        login() {
+        ...mapActions(['login']),
+        doLogin() {
             const canLogin = this.isInfoCorrect();
             if (!canLogin) return;
-            api.login({
+            this.login({
                 shop_code: this.shopCode,
                 user_code: this.userCode,
                 password: this.pwd
-            }).then(res => {
-                if (res.data.status === 1) {
-                    let shopConfig = this.formatShopConfig(res.data);
-                    if (this.isSave) {
-                        shopConfig.password = this.pwd;
-                    } else {
-                        shopConfig.password = '';
-                    }
-                    this.$bus.setShopConfig(shopConfig);
-                    this.$router.replace('/cashier');
-                } else {
-                    this.$toast(res.data.message + res.data.status);
+            }).then(shopConfig => {
+                this.$router.replace('/cashier');
+            }).catch(err => {
+                if (err) {
+                    this.$toast(err.message + err.status);
                 }
             });
-        },
-        formatShopConfig(config = {}) {
-            const data = config.data;
-            const { session, zdkzb } = data;
-
-            const shopConfig = {
-                token: session.token,
-                userCode: session.userCode,
-                userId: session.userId,
-                userRole: session.userRole,
-                userName: session.userName,
-                channelId: session.channelId,
-                user: config.user.data,
-                channel: session.channel,
-                orgCode: session.channel.accountChannel.code,
-                shopCode: session.channel.code,
-                shopName: session.channel.name,
-                shopPushId: zdkzb.send_message_id,
-                isSendMessage: zdkzb.is_send_message,
-                sendMessagePhone: zdkzb.send_message_phone,
-                brand: config.brand.data.rows, // 品牌
-                update_vip: data.update_vip // 会员信息采集(身高体重),enable: 1弹框输入 0不弹框 control: 1强制输入 0可选输入
-            };
-            return shopConfig;
         },
         isInfoCorrect() {
             if (this.shopCode.length < 1) {

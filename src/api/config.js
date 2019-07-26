@@ -95,16 +95,15 @@ axiosInstance.interceptors.response.use(
     function(response) {
         loading.close();
         if (response.data.status === 1) {
-            return response;
+            return response.data;
         } else {
-            Toast(response.data.message);
-            return Promise.reject();
+            return Promise.reject(response.data);
         }
     },
-    function(error) {
+    function() {
         loading.close();
         Toast('响应失败，请稍后再试');
-        return Promise.reject(error);
+        return Promise.reject();
     }
 );
 

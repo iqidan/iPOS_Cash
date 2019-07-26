@@ -34,6 +34,7 @@
 import api from '@/api';
 import SearchHeader from 'components/SearchHeader';
 import LoadContainer from 'components/LoadContainer';
+import { mapState } from 'vuex';
 
 export default {
     name: 'Order',
@@ -44,7 +45,7 @@ export default {
     data() {
         return {
             filters: {
-                shop_code: this.$bus.shopConfig.shopCode,
+                shop_code: this.shopConfig.shopCode,
                 page: 1,
                 page_size: 10
             },
@@ -53,11 +54,14 @@ export default {
             orderList: []
         };
     },
+    computed: {
+        ...mapState('authorize', ['shopConfig'])
+    },
     methods: {
         getOrders() {
             return api.get_order_list(this.filters).then(res => {
                 this.filters.page++;
-                if (this.orderList.length >= res.data.count) {
+                if (this.orderList.length >= res.count) {
                     this.allLoaded = true;
                 }
             });
@@ -80,6 +84,7 @@ export default {
         }
     },
     created() {
+        console.log(this.shopConfig);
         // this.getOrders();
     }
 };

@@ -1,22 +1,14 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 
-const store = new Vue({
-    data: {
-        shopConfig: {}
-    },
-    created() {
-        this.setShopConfig(this.getLocalConfig());
-    },
-    methods: {
-        setShopConfig (config = {}) {
-            this.shopConfig = config;
-            localStorage.setItem('bskey_shop', JSON.stringify(config))
-        },
-        getLocalConfig () {
-            const configStr = localStorage.getItem('bskey_shop') || '{}';
-            return JSON.parse(configStr);
-        }
+import authorize from './modules/authorize';
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+    // 任何修改都只能通过 mutations
+    strict: true,
+    modules: {
+        authorize
     }
-});
-
-export default store;
+})

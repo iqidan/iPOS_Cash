@@ -1,6 +1,12 @@
 import http from './config';
 
 export default {
+    /**
+     * 登录
+     * @param {String} shop_code [店铺代码]
+     * @param {String} user_code [用户代码]
+     * @param {String} password [密码]
+     */
     login(params) {
         return http.post('base/shop/shop_login_pos', params, { isLogin: 1 });
     },
