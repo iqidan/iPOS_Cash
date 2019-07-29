@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import authorize from './modules/authorize';
 import shopConfig from './modules/shopConfig';
+import search from './modules/search';
 
 Vue.use(Vuex);
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     strict: true,
     modules: {
         authorize,
-        shopConfig
+        shopConfig,
+        search
     }
 })

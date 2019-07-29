@@ -2,7 +2,8 @@
     <div class="cashier">
         <search-header
             @changeFilter="selectFilterItem"
-            :select-list="selectList"
+            @search="searchGoods"
+            :select-list="searchTypeList"
             :placeholder="'搜索商品'"/>
         <div class="cashier-summary">
             <div class="content summary-content">
@@ -54,7 +55,7 @@
 import { Popup } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
 import SelectorActions from 'components/SelectorActions';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
     name: 'Cashier',
@@ -66,11 +67,16 @@ export default {
     data() {
         return {
             actionMessage: '',
-            actionVisiable: false,
-            selectList: ['商品', '会员', '优惠券']
+            actionVisiable: false
         };
     },
     computed: {
+        searchTypeList() {
+            return this.$store.state.search.searchTypeList;
+        },
+        searchType() {
+            return this.$store.state.search.searchType;
+        },
         guideList () {
             return this.$store.state.shopConfig.guideList;
         },
@@ -87,8 +93,12 @@ export default {
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
-            this.$refs.brandPopup.turn(true);
+            // this.$refs.brandPopup.turn(true);
         });
+        console.log(this.$store.state.search)
+        console.log(this.searchTypeList)
+        console.log(this.searchType)
+        console.log(this.setSelectedGuide)
     },
     methods: {
         ...mapMutations(['setSelectedGuide', 'setSelectedBrand']),
@@ -119,6 +129,9 @@ export default {
             }
             this.setSelectedGuide(guide);
             this.$refs.guidePopup.turn();
+        },
+        searchGoods(searchResult) {
+            console.log(searchResult.data.data);// list
         }
     }
 };

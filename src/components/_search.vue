@@ -15,12 +15,17 @@
             </mt-popup>
         </div>
         <!-- <input class="input" type="text" placeholder="请输入小票单号" /> -->
-        <mt-field class="input" :placeholder="placeholder"/>
+        <mt-field
+            class="input"
+            v-model="keyWords"
+            :placeholder="placeholder"
+            @keydown.enter.native="searchGoods"/>
     </div>
 </template>
 
 <script>
 import { Radio, Popup, Field } from 'mint-ui';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'Search',
@@ -39,17 +44,52 @@ export default {
             default: '请输入搜索内容'
         }
     },
+    computed: {
+        ...mapGetters(['getSearchTypeValue']),
+    },
     data() {
         return {
-            checked: this.selectList[0],
+            checked: this.$store.state.search.selectedSearchType,
+            keyWords: '',
             popupVisible: false
         };
     },
     methods: {
+        ...mapMutations(['setType']),
+        ...mapActions(['search']),
+        searchGoods (e) {
+            let param = {};
+            switch (this.getSearchTypeValue) {
+                case '1':
+                    param = {
+                        sptm: this.keyWords
+                    }
+                    break;
+                case '2':
+                    param = {
+                        vip_code: this.keyWords,
+                        wkdm: '',
+                        is_select_vip: '',
+                        source: '6'
+                    }
+                    break;
+                case '3':
+                    param = {
+                        coupon_code: this.keyWords
+                    }
+                    break;
+            }
+            this.search(param).then(res => {
+                this.$emit('search', res);
+            });
+        },
         selectFilter () {
             this.popupVisible = false;
-            this.$emit('changeFilter', this.checked);
+            this.$emit('changeFilter', this.getSearchTypeValue);
+            this.setType(this.checked);
         }
+    },
+    created() {
     }
 };
 </script>

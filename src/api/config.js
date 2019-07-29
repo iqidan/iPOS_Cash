@@ -12,6 +12,7 @@ import BShelp from '@/utils/bshelp';
 function generateParams() {
     // TODO:
     const token = BShelp.getStorage('token');
+    const shop_code = BShelp.getStorage('shop_code');
     const { version, key, password, no_exchange_jsdm } = config;
 
     const date = new Date();
@@ -29,6 +30,7 @@ function generateParams() {
         sign,
         token,
         key,
+        shop_code,
         version,
         no_exchange_jsdm,
         time: timeStamp
@@ -118,6 +120,7 @@ axiosInstance.interceptors.response.use(
  */
 const http = {
     post: function(url, data, config = {}) {
+        data.shop_code = BShelp.getStorage('shop_code');
         // 登录接口参数格式不同
         if (config.isLogin) {
             return axiosInstance.post(url, data, config);
