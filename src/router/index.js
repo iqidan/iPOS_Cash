@@ -10,7 +10,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            redirect: '/cashier'
+            redirect: '/login'
         },
         {
             path: '/login',
@@ -108,6 +108,10 @@ const router = new Router({
                 title: '设置'
             },
             component: () => import('views/Setting/setting')
+        },
+        {
+            path: '*',
+            redirect: '/login'
         }
     ]
 });

@@ -25,7 +25,7 @@
             :closeOnClickModal="false"
             labelKey="brand.name"
             valueKey="brand.brandId"
-            @sure="selectBand"
+            @sure="selectBrand"
         />
 
         <selector-actions
@@ -35,24 +35,38 @@
             :closeOnClickModal="false"
             labelKey="UserName"
             valueKey="Id"
-            @sure="selectBand"
+            @sure="selectGuide"
         />
+
+        <mt-popup
+            v-model="actionVisiable"
+            position="top"
+            :modal="false"
+            class="action-popup"
+        >
+            <p>{{actionMessage}}</p>
+        </mt-popup>
     </div>
 </template>
 
 <script>
 // import api from '@/api';
+import { Popup } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
 import SelectorActions from 'components/SelectorActions';
+import { mapMutations } from 'vuex';
 
 export default {
     name: 'Cashier',
     components: {
+        MtPopup: Popup,
         SearchHeader,
         SelectorActions,
     },
     data() {
         return {
+            actionMessage: '',
+            actionVisiable: false,
             selectList: ['商品', '会员', '优惠券']
         };
     },
@@ -73,20 +87,38 @@ export default {
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
-            this.$refs.brandPopup.show();
+            this.$refs.brandPopup.turn(true);
         });
     },
     methods: {
+        ...mapMutations(['setSelectedGuide', 'setSelectedBrand']),
+        showActionPopup(msg) {
+            this.actionVisiable = true;
+            this.actionMessage = msg;
+            setTimeout(() => {
+                this.actionVisiable = false;
+            }, 2000);
+        },
         selectFilterItem(item) {
             console.log('this is cashier page');
             console.log(item);
         },
-        selectBand(band) {
-            console.log(band);
-            this.$refs.guidePopup.show();
+        selectBrand(brand) {
+            if (!brand) {
+                this.showActionPopup('请选择品牌！');
+                return;
+            }
+            this.setSelectedBrand(brand);
+            this.$refs.brandPopup.turn();
+            this.$refs.guidePopup.turn(true);
         },
         selectGuide(guide) {
-            console.log(guide);
+            if (!guide) {
+                this.showActionPopup('请选择导购员！');
+                return;
+            }
+            this.setSelectedGuide(guide);
+            this.$refs.guidePopup.turn();
         }
     }
 };
@@ -94,6 +126,17 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/scss/helper.scss";
+
+.action-popup {
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    font-size: 32px;
+    text-align: center;
+    background-color: rgba(0,0,0,.7);
+    backface-visibility: hidden;
+    color: #fff;
+}
 
 .cashier {
     display: flex;

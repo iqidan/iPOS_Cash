@@ -89,12 +89,11 @@ export default {
         }
     },
     methods: {
-        show () {
-            this.popupVisible = true;
+        turn (bol = false) {
+            this.popupVisible = bol;
         },
         sure () {
             this.$emit('sure', this.orderList.find(e => utils.getKey(e, this.valueKey) == this.orderChecked));
-            this.popupVisible = false;
         }
     }
 };

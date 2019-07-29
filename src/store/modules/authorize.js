@@ -1,4 +1,5 @@
 import api from '@/api';
+import BShelp from '@/utils/bshelp';
 
 const formatShopConfig = (config = {}) => {
     const data = config.data;
@@ -38,6 +39,7 @@ const getters = {
 const mutations = {
     setToken(state, token) {
         state.token = token;
+        BShelp.setStorage('token', token);
     }
 };
 

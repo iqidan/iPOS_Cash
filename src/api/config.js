@@ -3,6 +3,7 @@ import MD5 from 'js-md5';
 import qs from 'querystring';
 import config from '@/constants/config';
 import { Toast, Indicator } from 'mint-ui';
+import BShelp from '@/utils/bshelp';
 
 /**
  * 生成接口公共参数
@@ -10,8 +11,7 @@ import { Toast, Indicator } from 'mint-ui';
  */
 function generateParams() {
     // TODO:
-    const token =
-        'QTAyNDA1XzFhMzM3ZWMzZWY4NDQwYTk4OWE2YjZlOWY1ZjYwYmVlX2ExMjM0NTY=';
+    const token = BShelp.getStorage('token');
     const { version, key, password, no_exchange_jsdm } = config;
 
     const date = new Date();
