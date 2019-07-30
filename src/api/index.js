@@ -18,6 +18,26 @@ export default {
             params
         );
     },
+    // 根据id查找商品
+    search_goods_by_id(params) {
+        return http.post(
+            'stock/dim_allocate_order_record/find_by_id',
+            params
+        );
+    },
+    // 搜索会员
+    search_vip(params) {
+        return http.post(
+            'crm/vip/get_qtsy_vip&route=crm',
+            params
+        );
+    },
+    search_coupons(params) {
+        return http.post(
+            'crm/vip/check_coupon&route=crm',
+            params
+        );
+    },
     //查询邻店
     get_friend_shop(params) {
         return http.post('index/route&api=base/shop/get_friend_shop_u', {

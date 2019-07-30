@@ -41,16 +41,16 @@ const getters = {
 };
 
 const actions = {
-    search({ commit, state }, param) {
-        return api
-            .search_goods(param)
-            .then(res => {
-                return res;
-            })
-            .catch(() => {
-                /** */
-            });
-    }
+    // search({ commit, state }, param) {
+    //     return api
+    //         .search_goods(param)
+    //         .then(res => {
+    //             return res;
+    //         })
+    //         .catch(() => {
+    //             /** */
+    //         });
+    // }
 };
 
 export default {

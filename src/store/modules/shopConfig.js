@@ -29,7 +29,7 @@ const mutations = {
     // 设置品牌列表
     setBrandList(state, brandList) {
         state.brandList = brandList;
-        BShelp.setStorage('brandL_list', brandList);
+        BShelp.setStorage('brand_list', brandList);
     },
     // 设置选中品牌
     setSelectedBrand(state, selectedBrand) {

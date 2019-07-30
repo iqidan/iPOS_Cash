@@ -71,6 +71,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(['selectedBrand']),
         searchTypeList() {
             return this.$store.state.search.searchTypeList;
         },
@@ -93,7 +94,7 @@ export default {
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
-            // this.$refs.brandPopup.turn(true);
+            this.$refs.brandPopup.turn(true);
         });
         console.log(this.$store.state.search)
         console.log(this.searchTypeList)
