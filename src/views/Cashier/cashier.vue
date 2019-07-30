@@ -5,24 +5,28 @@
             @search="searchGoods"
             :select-list="searchTypeList"
             :placeholder="'搜索商品'"/>
-        
+
         <!-- 商品列表 start -->
         <ul class="goods-list">
-            <li>
+            <li v-for="good in goodsCart.goods" :key="good.sku">
                 <div class="good-detail">
                     <p class="good-title">
-                        <span class="bd">鞋子</span>
-                        <span class="red">￥1499</span>
+                        <span class="bd">{{good.spmc}}</span>
+                        <span class="red">￥{{good.dj}}</span>
                     </p>
-                    <span>规格：蔚蓝色 34</span>
-                    <span>规格：蔚蓝</span>
-                    <span>库存：99903</span>
+                    <span>规格：{{good.sku}}</span>
+                    <span>规格：{{good.gg1mc}} {{good.gg2mc}}</span>
+                    <span>库存：{{good.kcsl}}</span>
                     <span>
                         导购员：
-                        <select name="" id="">
-                            <option value="1">hahh</option>
-                            <option value="2">hehhe</option>
-                            <option value="3">test</option>
+                        <select v-model="good.guide">
+                            <option
+                                v-for="guide in guideList"
+                                :value="guide"
+                                :key="good.sku + guide.Id"
+                            >
+                                {{guide.UserName}}
+                            </option>
                         </select>
                     </span>
                 </div>
@@ -86,7 +90,7 @@
             class="edit-pop"
         >
             <p class="exist">
-                <i class="icon-exist"/>
+                <i class="icon-exist" @click="isEditGood = false"/>
             </p>
             <div class="edit-content">
                 <div class="good-detail">
@@ -131,7 +135,9 @@ export default {
             actionMessage: '',
             actionVisiable: false,
             isEditGood: false,
-
+            goodsCart: {
+                goods: []
+            }
         };
     },
     computed: {
@@ -158,7 +164,7 @@ export default {
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
-            // this.$refs.brandPopup.turn(true);
+            this.$refs.brandPopup.turn(true);
         });
         console.log(this.$store.state.search)
         console.log(this.searchTypeList)
@@ -195,8 +201,10 @@ export default {
             this.setSelectedGuide(guide);
             this.$refs.guidePopup.turn();
         },
-        searchGoods(searchResult) {
-            console.log(searchResult.data.data);// list
+        searchGoods(good) {
+            console.log('good: ');
+            console.log(good);// list
+            this.goodsCart.goods.push(good);
         },
         showGoodEditPannel(good) {
             this.isEditGood = true;
@@ -336,6 +344,11 @@ export default {
         text-align: right;
         height: 60px;
         line-height: 60px;
+        .icon-exist {
+            display: inline-block;
+            height: 100%;
+            padding: 0 20px;
+        }
     }
     .edit-content {
         line-height: 1.6;

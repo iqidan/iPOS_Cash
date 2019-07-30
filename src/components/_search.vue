@@ -103,8 +103,8 @@ export default {
                     shop_code:this.shop_code,
                     kw_id:1
                 }).then(res2 => {
-                    if (res2.data && res2.data[0]) {
-                        if(!res2.data[0].kcsl || res2.data[0].kcsl < 1){
+                    if (res2.data.data && res2.data.data[0]) {
+                        if(!res2.data.data[0].kcsl || res2.data.data[0].kcsl < 1){
                             this.$toast("该商品库存不足!");
                             return false;
                         }
@@ -115,12 +115,12 @@ export default {
                                 sum += v.sl;
                             }
                         });
-                        if(sum >= res2.data[0].kcsl){
+                        if(sum >= res2.data.data[0].kcsl){
                             this.bsHelp.showMsg("超出最大库存数,不允许添加!");
                             return;
                         }
 
-                        res.kcsl = res2.data[0].kcsl;
+                        res.kcsl = res2.data.data[0].kcsl;
                         return res;
                     }
                 })
@@ -133,9 +133,11 @@ export default {
                     res.sl = 1;
                 }
                 res.guide = this.selectedGuide;
-                this.goods_cart.goods.push(res);
-                this.goodsCart.refersh_cart();
-            })
+                // this.goods_cart.goods.push(res);
+                // this.goodsCart.refersh_cart();
+                this.$emit('search', res);
+                debugger;
+            });
         },
         searchVip (param) {
             // 更新信息？
