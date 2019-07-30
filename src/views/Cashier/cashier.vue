@@ -5,6 +5,41 @@
             @search="searchGoods"
             :select-list="searchTypeList"
             :placeholder="'搜索商品'"/>
+        
+        <!-- 商品列表 start -->
+        <ul class="goods-list">
+            <li>
+                <div class="good-detail">
+                    <p class="good-title">
+                        <span class="bd">鞋子</span>
+                        <span class="red">￥1499</span>
+                    </p>
+                    <span>规格：蔚蓝色 34</span>
+                    <span>规格：蔚蓝</span>
+                    <span>库存：99903</span>
+                    <span>
+                        导购员：
+                        <select name="" id="">
+                            <option value="1">hahh</option>
+                            <option value="2">hehhe</option>
+                            <option value="3">test</option>
+                        </select>
+                    </span>
+                </div>
+
+                <div class="good-operation">
+                    <i class="icon-edit" @click="showGoodEditPannel()"/>
+                    <div class="num-ctrl">
+                        <span>-</span>
+                        <span>1</span>
+                        <span>+</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <!-- 商品列表 end -->
+
+        <!-- 底部总计 start -->
         <div class="cashier-summary">
             <div class="content summary-content">
                 <div class="content-top">
@@ -18,7 +53,9 @@
             </div>
             <button class="btn">确定</button>
         </div>
+        <!-- 底部总计 end -->
 
+        <!-- 品牌选择 start -->
         <selector-actions
             ref="brandPopup"
             title="品牌选择"
@@ -28,7 +65,9 @@
             valueKey="brand.brandId"
             @sure="selectBrand"
         />
+        <!-- 品牌选择 end -->
 
+        <!-- 顶部提示alert start -->
         <selector-actions
             ref="guidePopup"
             title="导购员选择"
@@ -38,21 +77,43 @@
             valueKey="Id"
             @sure="selectGuide"
         />
+        <!-- 顶部提示alert start -->
 
+        <!-- 编辑商品信息弹框 start -->
         <mt-popup
-            v-model="actionVisiable"
-            position="top"
-            :modal="false"
-            class="action-popup"
+            v-model="isEditGood"
+            position="bottom"
+            class="edit-pop"
         >
-            <p>{{actionMessage}}</p>
+            <p class="exist">
+                <i class="icon-exist"/>
+            </p>
+            <div class="edit-content">
+                <div class="good-detail">
+                    <p class="good-title">
+                        <span class="bd">鞋子</span>
+                        <span class="red">￥1499</span>
+                    </p>
+                    <span>规格：蔚蓝色 34 </span>
+                    <span>参考价：¥</span>
+                    <span>库存：99903</span>
+                </div>
+
+                <div class="price">
+                    <span class="bd">单价</span>
+                    <input type="text" placeholder="1499">
+                </div>
+
+                <mt-button class="sure" type="primary" size="large">确定</mt-button>
+            </div>
         </mt-popup>
+        <!-- 编辑商品信息弹框 end -->
     </div>
 </template>
 
 <script>
 // import api from '@/api';
-import { Popup } from 'mint-ui';
+import { Popup, Button } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
 import SelectorActions from 'components/SelectorActions';
 import { mapMutations, mapState } from 'vuex';
@@ -61,13 +122,16 @@ export default {
     name: 'Cashier',
     components: {
         MtPopup: Popup,
+        MtButton: Button,
         SearchHeader,
         SelectorActions,
     },
     data() {
         return {
             actionMessage: '',
-            actionVisiable: false
+            actionVisiable: false,
+            isEditGood: false,
+
         };
     },
     computed: {
@@ -94,7 +158,7 @@ export default {
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
-            this.$refs.brandPopup.turn(true);
+            // this.$refs.brandPopup.turn(true);
         });
         console.log(this.$store.state.search)
         console.log(this.searchTypeList)
@@ -133,6 +197,9 @@ export default {
         },
         searchGoods(searchResult) {
             console.log(searchResult.data.data);// list
+        },
+        showGoodEditPannel(good) {
+            this.isEditGood = true;
         }
     }
 };
@@ -140,6 +207,26 @@ export default {
 
 <style lang="scss" scoped>
 @import "~/scss/helper.scss";
+.good-title {
+    display: flex;
+    justify-content: space-between;
+    font-size: 32px;
+    font-weight: 500;
+}
+.bd {
+    color: #000;
+}
+.red {
+    color: red;
+}
+.good-detail {
+    flex: 1;
+    color: #8e9093;
+    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+}
 
 .action-popup {
     width: 100%;
@@ -158,6 +245,48 @@ export default {
     flex-direction: column;
     flex: 1;
     position: relative;
+}
+
+.goods-list {
+    flex: 1;
+    padding-bottom: 120px;
+    line-height: 1.6;
+    li {
+        display: flex;
+        padding: 20px 30px;
+        background-color: #fff;
+        @include border-1px(#c8c7cc, bottom);
+        &:not(:last-child) {
+            margin-bottom: 40px;
+        }
+    }
+    .good-operation {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        .icon-edit {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        .num-ctrl {
+            display: flex;
+            height: 60px;
+            line-height: 60px;
+            @include border-1px(#c8c7cc, top, bottom, left, right);
+            span {
+                text-align: center;
+                flex: 1;
+                width: 60px;
+                &:not(:last-child) {
+                    @include border-1px(#c8c7cc, right);
+                }
+                &:nth-child(2) {
+                    width: 80px;
+                }
+            }
+        }
+    }
 }
 
 .cashier-summary {
@@ -196,5 +325,59 @@ export default {
     .active {
         color: #e30107;
     }
+}
+
+.edit-pop {
+    height: 600px;
+    width: 100%;
+    background: #fff;
+    .exist {
+        font-size: 28px;
+        text-align: right;
+        height: 60px;
+        line-height: 60px;
+    }
+    .edit-content {
+        line-height: 1.6;
+        padding: 0 32px;
+    }
+    .good-detail {
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 20px 0;
+        @include border-1px(#c8c7cc, bottom);
+        .good-title {
+            flex: 100%;
+        }
+        > span {
+            flex: 50% 0 0;
+            &:nth-of-type(even) {
+                text-align: right;
+            }
+        }
+    }
+    .price {
+        color: #8e9093;
+        font-size: 32px;
+        padding: 30px 0;
+        display: flex;
+        align-items: center;
+        line-height: 1;
+        @include border-1px(#c8c7cc, bottom);
+        input {
+            flex: 1;
+            font-size: inherit;
+        }
+        .bd {
+            padding-right: 40px;
+        }
+    }
+    .sure {
+        border-radius: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+    
 }
 </style>
