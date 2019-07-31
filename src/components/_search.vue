@@ -136,7 +136,6 @@ export default {
                 // this.goods_cart.goods.push(res);
                 // this.goodsCart.refersh_cart();
                 this.$emit('search', res);
-                debugger;
             });
         },
         searchVip (param) {

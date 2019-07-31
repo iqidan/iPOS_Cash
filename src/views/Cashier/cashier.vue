@@ -8,7 +8,7 @@
 
         <!-- 商品列表 start -->
         <ul class="goods-list">
-            <li v-for="good in goodsCart.goods" :key="good.sku">
+            <li v-for="(good, index) in goodsCart.goods" :key="good.sku">
                 <div class="good-detail">
                     <p class="good-title">
                         <span class="bd">{{good.spmc}}</span>
@@ -34,9 +34,9 @@
                 <div class="good-operation">
                     <i class="icon-edit" @click="showGoodEditPannel()"/>
                     <div class="num-ctrl">
-                        <span>-</span>
-                        <span>1</span>
-                        <span>+</span>
+                        <span @click="changeGoodNum(index, -1)">-</span>
+                        <span>{{good.sl}}</span>
+                        <span @click="changeGoodNum(index, 1)">+</span>
                     </div>
                 </div>
             </li>
@@ -166,10 +166,6 @@ export default {
         this.$nextTick(() => {
             this.$refs.brandPopup.turn(true);
         });
-        console.log(this.$store.state.search)
-        console.log(this.searchTypeList)
-        console.log(this.searchType)
-        console.log(this.setSelectedGuide)
     },
     methods: {
         ...mapMutations(['setSelectedGuide', 'setSelectedBrand']),
@@ -202,12 +198,18 @@ export default {
             this.$refs.guidePopup.turn();
         },
         searchGoods(good) {
-            console.log('good: ');
-            console.log(good);// list
-            this.goodsCart.goods.push(good);
+            const goodInCartIndex = this.goodsCart.goods.findIndex(g => g.sku === good.sku);
+            if (goodInCartIndex >= 0) {
+                this.goodsCart.goods[goodInCartIndex].sl++
+            } else {
+                this.goodsCart.goods.push(good);
+            }
         },
         showGoodEditPannel(good) {
             this.isEditGood = true;
+        },
+        changeGoodNum(index, num = 0) {
+            this.goodsCart.goods[index].sl += num;
         }
     }
 };
@@ -281,14 +283,12 @@ export default {
             display: flex;
             height: 60px;
             line-height: 60px;
-            @include border-1px(#c8c7cc, top, bottom, left, right);
+            @include border-1px(#c8c7cc, left);
             span {
                 text-align: center;
                 flex: 1;
                 width: 60px;
-                &:not(:last-child) {
-                    @include border-1px(#c8c7cc, right);
-                }
+                @include border-1px(#c8c7cc, top, right, bottom);
                 &:nth-child(2) {
                     width: 80px;
                 }
