@@ -12,7 +12,7 @@
                 <div class="good-detail">
                     <p class="good-title">
                         <span class="bd">{{good.spmc}}</span>
-                        <span class="red">￥{{good.dj}}</span>
+                        <span class="red">{{good.dj | currency({precision: 0})}}</span>
                     </p>
                     <span>规格：{{good.sku}}</span>
                     <span>参考价：{{good.gg1mc}} {{good.gg2mc}}</span>
@@ -48,11 +48,11 @@
             <div class="content summary-content">
                 <div class="content-top">
                     <span>合计：</span>
-                    <span class="red">￥0.00</span>
+                    <span class="red">{{totalMoney | currency}}</span>
                 </div>
                 <div class="content-bottom">
                     <span>数量：</span>
-                    <span>0</span>
+                    <span>{{totalNum}}</span>
                 </div>
             </div>
             <button class="btn">确定</button>
@@ -139,7 +139,9 @@ export default {
                 goods: []
             },
             edittingGood: {},
-            edittedGoodPrice: ''
+            edittedGoodPrice: '',
+            totalNum: 0,
+            totalMoney: 0
         };
     },
     computed: {
@@ -206,6 +208,7 @@ export default {
             } else {
                 this.goodsCart.goods.push(good);
             }
+            this.refreshCart();
         },
         showGoodEditPannel(good) {
             this.edittedGoodPrice = '';
@@ -214,10 +217,19 @@ export default {
         },
         changeGoodNum(index, num = 0) {
             this.goodsCart.goods[index].sl += num;
+            this.refreshCart();
         },
         changeGoodInCart() {
             this.edittingGood.dj = this.edittedGoodPrice;
             this.isEditGood = false;
+        },
+        refreshCart() {
+            this.totalNum = 0;
+            this.totalMoney = 0;
+            this.goodsCart.goods.forEach(good => {
+                this.totalNum = good.sl;
+                this.totalMoney = good.sl * good.dj;
+            });
         }
     }
 };

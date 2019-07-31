@@ -59,7 +59,8 @@ const filters = {
         num = Number.prototype.toFixed.call(num, precision);
         // 倍率处理
         [integerStr, decimalStr = ''] = String(num * rebate).split('.');
-        decimalStr = decimalStr.padEnd(precision, '0'); // 小数补0
+        // 小数补0
+        decimalStr = precision > 0 ? '.' + decimalStr.padEnd(precision, '0') : '';
         // 分隔符处理
         if (num >= 10000) {
             let i = integerStr.length;
@@ -70,7 +71,7 @@ const filters = {
             integerStr = tempArr.join(delimit);
         }
         // 正负、币种处理
-        res += integerStr + '.' + decimalStr;
+        res += integerStr + decimalStr;
         return res;
     }
 };
