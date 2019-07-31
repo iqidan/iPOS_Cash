@@ -8,9 +8,6 @@ import store from './store';
 import { Toast, Indicator, InfiniteScroll } from 'mint-ui';
 import '@/filters';
 
-import _icon from 'components/_icon';
-
-Vue.component('icon-font', _icon);
 Vue.use(InfiniteScroll);
 
 Vue.config.productionTip = false;

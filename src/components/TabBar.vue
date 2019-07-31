@@ -10,7 +10,6 @@
             class="bar-item"
             @click.native="changeTab(item.url)"
         >
-            <!-- <icon-font slot="icon" class="icon" icon="scan" /> -->
             <div class="tab-inner">
                 <i :class="`icon-${item.icon}`"/>
                 <span>{{ item.name }}</span>
