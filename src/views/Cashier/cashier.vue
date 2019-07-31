@@ -15,7 +15,7 @@
                         <span class="red">￥{{good.dj}}</span>
                     </p>
                     <span>规格：{{good.sku}}</span>
-                    <span>规格：{{good.gg1mc}} {{good.gg2mc}}</span>
+                    <span>参考价：{{good.gg1mc}} {{good.gg2mc}}</span>
                     <span>库存：{{good.kcsl}}</span>
                     <span>
                         导购员：
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="good-operation">
-                    <i class="icon-edit" @click="showGoodEditPannel()"/>
+                    <i class="icon-edit" @click="showGoodEditPannel(good)"/>
                     <div class="num-ctrl">
                         <span @click="changeGoodNum(index, -1)">-</span>
                         <span>{{good.sl}}</span>
@@ -95,20 +95,20 @@
             <div class="edit-content">
                 <div class="good-detail">
                     <p class="good-title">
-                        <span class="bd">鞋子</span>
-                        <span class="red">￥1499</span>
+                        <span class="bd">{{edittingGood.spmc}}</span>
+                        <span class="red">￥{{edittingGood.dj}}</span>
                     </p>
-                    <span>规格：蔚蓝色 34 </span>
-                    <span>参考价：¥</span>
-                    <span>库存：99903</span>
+                    <span>规格：{{edittingGood.sku}}</span>
+                    <span>规格：{{edittingGood.gg1mc}} {{edittingGood.gg2mc}}</span>
+                    <span>库存：{{edittingGood.kcsl}}</span>
                 </div>
 
                 <div class="price">
                     <span class="bd">单价</span>
-                    <input type="text" placeholder="1499">
+                    <input type="text" :placeholder="edittingGood.dj" v-model="edittedGoodPrice">
                 </div>
 
-                <mt-button class="sure" type="primary" size="large">确定</mt-button>
+                <mt-button class="sure" type="primary" size="large" @click="changeGoodInCart()">确定</mt-button>
             </div>
         </mt-popup>
         <!-- 编辑商品信息弹框 end -->
@@ -137,7 +137,9 @@ export default {
             isEditGood: false,
             goodsCart: {
                 goods: []
-            }
+            },
+            edittingGood: {},
+            edittedGoodPrice: ''
         };
     },
     computed: {
@@ -206,10 +208,16 @@ export default {
             }
         },
         showGoodEditPannel(good) {
+            this.edittedGoodPrice = '';
             this.isEditGood = true;
+            this.edittingGood = good;
         },
         changeGoodNum(index, num = 0) {
             this.goodsCart.goods[index].sl += num;
+        },
+        changeGoodInCart() {
+            this.edittingGood.dj = this.edittedGoodPrice;
+            this.isEditGood = false;
         }
     }
 };

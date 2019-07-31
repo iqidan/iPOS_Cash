@@ -65,6 +65,7 @@ export default {
     },
     methods: {
         ...mapMutations(['setType']),
+        // enter搜索事件
         keyUp (e) {
             switch (this.getSearchTypeValue) {
                 case '1':
@@ -85,7 +86,6 @@ export default {
         },
         searchGoods (param) {
             return api.search_goods(param).then(res => {
-                // 首条stock ？ 添加 ： 提示
                 if (res.data.data && res.data.data[0]) {
                     if(res.data.data[0].ppdm != this.selectedBrand.brand.code){
                         this.bsHelp.showMsg("不允许录入,非"+this.selectedBrand.brand.name+"品牌商品!");

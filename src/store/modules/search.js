@@ -1,6 +1,6 @@
 // 搜索功能相关数据
 
-import api from '@/api';
+// import api from '@/api';
 
 const PAY_STATUS = [
     {
