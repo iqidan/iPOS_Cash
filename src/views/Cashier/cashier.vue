@@ -117,7 +117,7 @@
 
 <script>
 // import api from '@/api';
-import { Popup, Button } from 'mint-ui';
+import { Popup, Button, MessageBox } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
 import SelectorActions from 'components/SelectorActions';
 import { mapMutations, mapState } from 'vuex';
@@ -216,12 +216,35 @@ export default {
             this.edittingGood = good;
         },
         changeGoodNum(index, num = 0) {
-            this.goodsCart.goods[index].sl += num;
-            this.refreshCart();
+            // this.goodsCart.goods[index].sl += num;
+            // this.refreshCart()
+            let sum = 0;
+            this.goodsCart.goods.forEach((v, i) => {
+                if (v.singleProductCode == this.goodsCart.goods[index].singleProductCode) {
+                    sum += v.sl;
+                }
+            });
+            if (sum + num > this.goodsCart.goods[index].kcsl) {
+                this.$toast("超出库存数, 不允许增加!");
+                return;
+            }
+
+            if (this.goodsCart.goods[index].sl + num * 1 > 0) {
+                this.goodsCart.goods[index].sl += num * 1;
+                this.refreshCart();
+            }else {
+                MessageBox.confirm('确认删除此商品吗', '提示').then(action => {
+                    this.goodsCart.goods.splice(index, 1);
+                    this.refreshCart();
+                }).catch(() => {});
+            };
         },
         changeGoodInCart() {
-            this.edittingGood.dj = this.edittedGoodPrice;
+            this.edittingGood.dj
+                = this.goodsCart.goods.find(good => this.edittingGood.sku === good.sku).dj
+                = this.edittedGoodPrice;
             this.isEditGood = false;
+            this.refreshCart();
         },
         refreshCart() {
             this.totalNum = 0;
@@ -281,6 +304,7 @@ export default {
     flex: 1;
     padding-bottom: 120px;
     line-height: 1.6;
+    overflow-y: auto;
     li {
         display: flex;
         padding: 20px 30px;

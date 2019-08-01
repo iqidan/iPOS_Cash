@@ -49,7 +49,9 @@ export default {
         ...mapState({
             selectedBrand: state => state.shopConfig.selectedBrand,
             selectedGuide: state => state.shopConfig.selectedGuide,
-            shop_code: state => state.shopConfig.shopConfig.shop_code
+            shop_code: state => state.shopConfig.shopConfig.shop_code,
+            selected_vip: state => state.vip.selected_vip,
+            update_vip_list: state => state.shopConfig.shopConfig.update_vip
         }),
         ...mapGetters(['getSearchTypeValue']),
     },
@@ -64,31 +66,26 @@ export default {
         };
     },
     methods: {
-        ...mapMutations(['setType']),
+        ...mapMutations(['setType', 'set_selected_vip']),
         // enter搜索事件
         keyUp (e) {
             switch (this.getSearchTypeValue) {
                 case '1':
-                    this.searchGoods({sptm: this.keyWords});
+                    this.searchGoods();
                     break;
                 case '2':
-                    this.searchGoods({
-                        vip_code: this.keyWords,
-                        wkdm: '',
-                        is_select_vip: '',
-                        source: '6'
-                    });
+                    this.searchVip();
                     break;
                 case '3':
-                    this.searchGoods({coupon_code: this.keyWords});
+                    this.searchCoupon();
                     break;
             }
         },
-        searchGoods (param) {
-            return api.search_goods(param).then(res => {
+        searchGoods () {
+            return api.search_goods({sptm: this.keyWords}).then(res => {
                 if (res.data.data && res.data.data[0]) {
                     if(res.data.data[0].ppdm != this.selectedBrand.brand.code){
-                        this.bsHelp.showMsg("不允许录入,非"+this.selectedBrand.brand.name+"品牌商品!");
+                        this.$toast("不允许录入,非"+this.selectedBrand.brand.name+"品牌商品!");
                         return false;
                     }
                     return res.data.data[0];
@@ -116,7 +113,7 @@ export default {
                             }
                         });
                         if(sum >= res2.data.data[0].kcsl){
-                            this.bsHelp.showMsg("超出最大库存数,不允许添加!");
+                            this.$toast("超出最大库存数,不允许添加!");
                             return;
                         }
 
@@ -138,17 +135,126 @@ export default {
                 this.$emit('search', res);
             });
         },
-        searchVip (param) {
-            // 更新信息？
-            return api.search_goods(param);
+        searchVip () {
+            const keyword = this.keyWords;
+            if(!keyword || keyword.length < 3){
+                this.$toast("请输入会员号!");
+                return;
+            }
+            return api
+                    .search_vip({
+                        vip_code: keyword,
+                        wkdm: '',
+                        is_select_vip: '',
+                        source: '6'
+                    }).then(res => {
+                        let is_vip_of_current_brand = false; // 是当前品牌vip
+                        if(res.status == 1) {
+                            let member = res.data;
+                            is_vip_of_current_brand = member.brands.some(v =>{
+                                if (v.brandid == this.selectedBrand.brand.code) {
+                                    this.selectedBrand.customer_level = v.loyaltytieridname;
+                                    this.selectedBrand.customer_level_id = v.loyaltytierid;
+                                    member.membercard = v.membercard;
+                                    member.customer_level = v.loyaltytieridname;
+                                    return true;
+                                }
+                                return false;
+                            });
+                            if (is_vip_of_current_brand) {
+                                let typeList = [{code:"00", name:"普通会员"}];
+                                if (member.ifstaff) {
+                                    typeList.push({code:"10", name:"员工"});
+                                }
+                                if (member.svip) {
+                                    typeList.push({code:"20", name:"SVIP"});
+                                }
+                                member.typeList = typeList;
+                                member.type = typeList[0];
+                                this.set_selected_vip(member);
+                                this.vip_check(member);
+                            } else {
+                                this.$toast("该会员不属于"+this.selectedBrand.brand.name+"品牌会员!");
+                            }
+                        }else {
+                            this.$toast("未查找到该会员");
+                        }
+                    });
         },
-        searchCoupon (param) {
-            return api.search_goods(param);
+        searchCoupon () {
+            return api.search_coupons({coupon_code: this.keyWords});
         },
         selectFilter () {
             this.popupVisible = false;
             this.$emit('changeFilter', this.getSearchTypeValue);
             this.setType(this.checked);
+        },
+        //检查vip相关信息
+        vip_check (vip) {
+            let updateVipArr = this.update_vip_list,
+                updateVip = null;
+
+            updateVipArr.some((v)=>{
+                if(v.brand == this.selectedBrand.brand.code){
+                    updateVip = v;
+                    return true;
+                }
+
+                return false;
+            });
+            console.log("updateVip==", updateVip);
+
+            if(updateVip == null){
+                return;
+            }
+
+        
+
+            if(!updateVip || updateVip.enable != 1 || (vip.collectheight && vip.collectweight)){
+                return;
+            }
+
+            let vipData = [],
+            btns = [];
+            
+            vipData.push({type:"text", name:"height", id:0, value:vip.collectheight, placeholder:"请录入身高(CM)"});
+            vipData.push({type:"text", name:"weight", id:1, value:vip.collectweight, placeholder:"请录入体重(KG)"});
+
+            btns.push({
+                text:"确认",
+                handler:(data)=>{
+                    if(data.height < 1 || data.height > 300){
+                        this.$toast("请输入会员身高(CM)");
+                        return false;
+                    }
+
+                    if(data.weight < 1 || data.weight > 500){
+                        this.$toast("请输入会员体重(KG)");
+                        return false;
+                    }
+
+                    let newData = {vip_code:vip.vip_code, collectheight:Number(data.height), collectweight:Number(data.weight)};
+                    this.update_vip(newData);
+                    return true;
+                }
+            });
+
+            if(updateVip.control !=1){
+            btns.push({
+                text:"取消",
+                handler:()=>{
+                return true;
+                }
+            });
+            }
+
+            this.bsHelp.showAlerts({
+            title: '会员身高体重',
+            subTitle: '',
+            inputs: vipData,
+            enableBackdropDismiss: false,
+            buttons: btns
+            });
         }
     },
     created() {
