@@ -2,23 +2,24 @@
     <div class="login">
         <label>
             店铺号
-            <input type="text" v-model="shopCode">
+            <input type="text" v-model="shopCode" />
         </label>
         <label>
             用户号
-            <input type="text" v-model="userCode">
+            <input type="text" v-model="userCode" />
         </label>
         <label>
             密码
-            <input type="password" v-model="pwd">
+            <input type="password" v-model="pwd" />
         </label>
         <button @click="doLogin()">登录</button>
     </div>
 </template>
 
 <script>
-import api from '@/api';
-import { mapState, mapActions } from 'vuex';
+// import api from '@/api';
+import { mapActions } from 'vuex';
+import { MessageBox } from 'mint-ui';
 
 export default {
     name: 'Login',
@@ -39,14 +40,19 @@ export default {
                 shop_code: this.shopCode,
                 user_code: this.userCode,
                 password: this.pwd
-            }).then(shopConfig => {
-                this.$router.replace('/cashier');
-                this.showGuideListPopup({ty:2,shop_code: this.shopCode});
-            }).catch(err => {
-                if (err) {
-                    this.$toast(err.message + err.status);
-                }
-            });
+            })
+                .then(() => {
+                    this.$router.replace('/cashier');
+                    this.showGuideListPopup({
+                        ty: 2,
+                        shop_code: this.shopCode
+                    });
+                })
+                .catch(err => {
+                    if (err) {
+                        this.$toast(err.message + err.status);
+                    }
+                });
         },
         isInfoCorrect() {
             if (this.shopCode.length < 1) {

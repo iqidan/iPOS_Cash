@@ -26,7 +26,7 @@
 
 <script>
 import api from '@/api';
-import { Radio, Popup, Field } from 'mint-ui';
+import { Radio, Popup, Field, MessageBox } from 'mint-ui';
 import { mapMutations, mapGetters, mapState } from 'vuex';
 
 export default {
@@ -206,6 +206,40 @@ export default {
         },
         //检查vip相关信息
         vip_check(vip) {
+            let getHeight = () => MessageBox.prompt('请录入会员身高', '提示', {
+                inputPlaceholder: '请录入身高(CM)',
+                inputType: 'number',
+                showCancelButton: updateVip.control !== 1,
+                closeOnClickModal: false
+            })
+                .then(({ value }) => {
+                    if (value < 1 || value > 300) {
+                        this.$toast('请输入会员身高(CM)');
+                        return Promise.reject();
+                    } else {
+                        return value;
+                    }
+                }).catch(err => {
+                    if (!err) return getHeight();
+                });
+
+            let getWeight = () => MessageBox.prompt('请录入会员体重', '提示', {
+                inputPlaceholder: '请录入体重(KG)',
+                inputType: 'number',
+                showCancelButton: updateVip.control !== 1,
+                closeOnClickModal: false
+            })
+                .then(({ value }) => {
+                    if (value < 1 || value > 500) {
+                        this.$toast('请输入会员体重(KG)');
+                        return Promise.reject();
+                    } else {
+                        return value;
+                    }
+                }).catch(err => {
+                    if (!err) return getHeight();
+                });
+
             let updateVipArr = this.update_vip_list,
                 updateVip = null;
 
@@ -226,63 +260,16 @@ export default {
                 return;
             }
 
-            let vipData = [],
-                btns = [];
-
-            vipData.push({
-                type: 'text',
-                name: 'height',
-                id: 0,
-                value: vip.collectheight,
-                placeholder: '请录入身高(CM)'
+            Promise.all([getHeight(), getWeight()]).then(([height, weight]) => {
+                console.log('=============');
+                console.log(height);
+                console.log(height);
             });
-            vipData.push({
-                type: 'text',
-                name: 'weight',
-                id: 1,
-                value: vip.collectweight,
-                placeholder: '请录入体重(KG)'
-            });
-
-            btns.push({
-                text: '确认',
-                handler: data => {
-                    if (data.height < 1 || data.height > 300) {
-                        this.$toast('请输入会员身高(CM)');
-                        return false;
-                    }
-
-                    if (data.weight < 1 || data.weight > 500) {
-                        this.$toast('请输入会员体重(KG)');
-                        return false;
-                    }
-
-                    let newData = {
-                        vip_code: vip.vip_code,
-                        collectheight: Number(data.height),
-                        collectweight: Number(data.weight)
-                    };
-                    this.update_vip(newData);
-                    return true;
-                }
-            });
-
-            if (updateVip.control !== 1) {
-                btns.push({
-                    text: '取消',
-                    handler: () => {
-                        return true;
-                    }
-                });
-            }
-
-            this.bsHelp.showAlerts({
-                title: '会员身高体重',
-                subTitle: '',
-                inputs: vipData,
-                enableBackdropDismiss: false,
-                buttons: btns
-            });
+            // this.$http.update_vip({
+            //     vip_code:this.selected_vip.vip_code,
+            //     collectheight:Number(height),
+            //     collectweight:Number(value)
+            // })
         }
     },
     created() {}

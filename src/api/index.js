@@ -20,23 +20,14 @@ export default {
     },
     // 根据id查找商品
     search_goods_by_id(params) {
-        return http.post(
-            'stock/dim_allocate_order_record/find_by_id',
-            params
-        );
+        return http.post('stock/dim_allocate_order_record/find_by_id', params);
     },
     // 搜索会员
     search_vip(params) {
-        return http.post(
-            'crm/vip/get_qtsy_vip&route=crm',
-            params
-        );
+        return http.post('crm/vip/get_qtsy_vip&route=crm', params);
     },
     search_coupons(params) {
-        return http.post(
-            'crm/vip/check_coupon&route=crm',
-            params
-        );
+        return http.post('crm/vip/check_coupon&route=crm', params);
     },
     //查询邻店
     get_friend_shop(params) {
@@ -142,7 +133,11 @@ export default {
     },
 
     // 获取订单列表
-    get_order_list (params) {
+    get_order_list(params) {
         return http.post('pos/pos/get_receipt_list', params);
+    },
+
+    update_vip(params) {
+        return http.post('crm/vip/update_vip&route=crm', params);
     }
 };

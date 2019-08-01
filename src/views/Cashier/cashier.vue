@@ -6,42 +6,55 @@
             :select-list="searchTypeList"
             :placeholder="'搜索商品'"/>
 
-        <!-- 商品列表 start -->
-        <ul class="goods-list">
-            <li v-for="(good, index) in goodsCart.goods" :key="good.sku">
-                <div class="good-detail">
-                    <p class="good-title">
-                        <span class="bd">{{good.spmc}}</span>
-                        <span class="red">{{good.dj | currency({precision: 0})}}</span>
-                    </p>
-                    <span>规格：{{good.sku}}</span>
-                    <span>参考价：{{good.gg1mc}} {{good.gg2mc}}</span>
-                    <span>库存：{{good.kcsl}}</span>
-                    <span>
-                        导购员：
-                        <select v-model="good.guide">
-                            <option
-                                v-for="guide in guideList"
-                                :value="guide"
-                                :key="good.sku + guide.Id"
-                            >
-                                {{guide.UserName}}
-                            </option>
-                        </select>
-                    </span>
+        <!-- 中心内容 start -->
+        <div class="cashier-content">
+            <div v-if="selected_vip" class="select-vip">
+                <div class="vip-avatar center">
+                    <i class="icon-user"/>
                 </div>
 
-                <div class="good-operation">
-                    <i class="icon-edit" @click="showGoodEditPannel(good)"/>
-                    <div class="num-ctrl">
-                        <span @click="changeGoodNum(index, -1)">-</span>
-                        <span>{{good.sl}}</span>
-                        <span @click="changeGoodNum(index, 1)">+</span>
-                    </div>
+                <div class="vip-detail">
+                    <span class="bd">{{selected_vip.membercard}}</span>
+                    <span>卡类型：{{selected_vip.customer_level}}</span>
+                    <span>折扣：{{selected_vip.rebate}}</span>
                 </div>
-            </li>
-        </ul>
-        <!-- 商品列表 end -->
+            </div>
+            <ul class="goods-list">
+                <li v-for="(good, index) in goodsCart.goods" :key="good.sku">
+                    <div class="good-detail">
+                        <p class="good-title">
+                            <span class="bd">{{good.spmc}}</span>
+                            <span class="red">{{good.dj | currency({precision: 0})}}</span>
+                        </p>
+                        <span>规格：{{good.sku}}</span>
+                        <span>参考价：{{good.gg1mc}} {{good.gg2mc}}</span>
+                        <span>库存：{{good.kcsl}}</span>
+                        <span>
+                            导购员：
+                            <select v-model="good.guide">
+                                <option
+                                    v-for="guide in guideList"
+                                    :value="guide"
+                                    :key="good.sku + guide.Id"
+                                >
+                                    {{guide.UserName}}
+                                </option>
+                            </select>
+                        </span>
+                    </div>
+
+                    <div class="good-operation">
+                        <i class="icon-edit" @click="showGoodEditPannel(good)"/>
+                        <div class="num-ctrl">
+                            <span @click="changeGoodNum(index, -1)">-</span>
+                            <span>{{good.sl}}</span>
+                            <span @click="changeGoodNum(index, 1)">+</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- 中心内容 end -->
 
         <!-- 底部总计 start -->
         <div class="cashier-summary">
@@ -145,7 +158,14 @@ export default {
         };
     },
     computed: {
-        ...mapState(['selectedBrand']),
+        ...mapState({
+            selectedBrand(state) {
+                return state.shopConfig.selectedBrand
+            },
+            selected_vip(state) {
+                return state.vip.selected_vip
+            }
+        }),
         searchTypeList() {
             return this.$store.state.search.searchTypeList;
         },
@@ -298,11 +318,47 @@ export default {
     position: relative;
 }
 
-.goods-list {
+.cashier-content {
     flex: 1;
-    padding-bottom: 120px;
-    line-height: 1.6;
     overflow-y: auto;
+    padding-bottom: 120px;
+}
+
+.select-vip {
+    color: #8e9093;
+    font-size: 24px;
+    line-height: 2;
+    display: flex;
+    padding: 20px 0;
+    background-color: #fff;
+    @include border-1px(#c8c7cc, bottom);
+    margin-bottom: 40px;
+    .vip-avatar {
+        width: 140px;
+        .icon-user {
+            text-align: center;
+            color: #fff;
+            width: 72px;
+            height: 72px;
+            font-size: 40px;
+            line-height: 72px;
+            border-radius: 50%;
+            background-color: #000;
+        }
+    }
+    .vip-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+.goods-list {
+    &:not(:first-child) {
+        @include border-1px(#c8c7cc, top);
+    }
+    line-height: 1.6;
     li {
         display: flex;
         padding: 20px 30px;
