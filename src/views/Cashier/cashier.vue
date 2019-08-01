@@ -180,9 +180,7 @@ export default {
                 this.actionVisiable = false;
             }, 2000);
         },
-        selectFilterItem(item) {
-            console.log('this is cashier page');
-            console.log(item);
+        selectFilterItem() {
         },
         selectBrand(brand) {
             if (!brand) {
@@ -219,13 +217,13 @@ export default {
             // this.goodsCart.goods[index].sl += num;
             // this.refreshCart()
             let sum = 0;
-            this.goodsCart.goods.forEach((v, i) => {
-                if (v.singleProductCode == this.goodsCart.goods[index].singleProductCode) {
+            this.goodsCart.goods.forEach(v => {
+                if (v.singleProductCode === this.goodsCart.goods[index].singleProductCode) {
                     sum += v.sl;
                 }
             });
             if (sum + num > this.goodsCart.goods[index].kcsl) {
-                this.$toast("超出库存数, 不允许增加!");
+                this.$toast('超出库存数, 不允许增加!');
                 return;
             }
 
@@ -233,11 +231,11 @@ export default {
                 this.goodsCart.goods[index].sl += num * 1;
                 this.refreshCart();
             }else {
-                MessageBox.confirm('确认删除此商品吗', '提示').then(action => {
+                MessageBox.confirm('确认删除此商品吗', '提示').then(() => {
                     this.goodsCart.goods.splice(index, 1);
                     this.refreshCart();
                 }).catch(() => {});
-            };
+            }
         },
         changeGoodInCart() {
             this.edittingGood.dj
