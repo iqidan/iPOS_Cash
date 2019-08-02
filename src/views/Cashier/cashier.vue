@@ -2,7 +2,7 @@
     <div class="cashier">
         <search-header
             @search="searchGoods"
-            :select-list="searchTypeList"
+            :select-list="search_type_list"
             :placeholder="'搜索商品'"/>
 
         <!-- 中心内容 start -->
@@ -32,7 +32,7 @@
                             导购员：
                             <select v-model="good.guide">
                                 <option
-                                    v-for="guide in guideList"
+                                    v-for="guide in guide_list"
                                     :value="guide"
                                     :key="good.sku + guide.Id"
                                 >
@@ -75,7 +75,7 @@
         <selector-actions
             ref="brandPopup"
             title="品牌选择"
-            :orderList="brandList"
+            :orderList="brand_list"
             :closeOnClickModal="false"
             labelKey="brand.name"
             valueKey="brand.brandId"
@@ -87,7 +87,7 @@
         <selector-actions
             ref="guidePopup"
             title="导购员选择"
-            :orderList="guideList"
+            :orderList="guide_list"
             :closeOnClickModal="false"
             labelKey="UserName"
             valueKey="Id"
@@ -158,32 +158,19 @@ export default {
     },
     computed: {
         ...mapState({
-            selectedBrand(state) {
-                return state.shopConfig.selectedBrand
-            },
-            selected_vip(state) {
-                return state.vip.selected_vip
-            }
-        }),
-        searchTypeList() {
-            return this.$store.state.search.searchTypeList;
-        },
-        searchType() {
-            return this.$store.state.search.searchType;
-        },
-        guideList () {
-            return this.$store.state.shopConfig.guideList;
-        },
-        brandList () {
-            return this.$store.state.shopConfig.brandList;
-        }
+            selected_brand: state => state.shopConfig.selected_brand,
+            selected_vip: state => state.vip.selected_vip,
+            search_type_list: state => state.search.search_type_list,
+            guide_list: state => state.shopConfig.guide_list,
+            brand_list: state => state.shopConfig.brand_list
+        })
     },
     mounted() {
         // api.get_user_list({
         //     ty: '2',
         //     shop_code: 'A024'
         // });
-        // this.$store.commit('setGuideList', [
+        // this.$store.commit('set_guide_list', [
         //     '导购11', 'Jay', 'MJ', '陈'
         // ]);
         this.$nextTick(() => {
@@ -191,7 +178,7 @@ export default {
         });
     },
     methods: {
-        ...mapMutations(['setSelectedGuide', 'setSelectedBrand']),
+        ...mapMutations(['set_selected_guide', 'set_selected_brand']),
         // 弹框显示
         showActionPopup(msg) {
             this.actionVisiable = true;
@@ -206,7 +193,7 @@ export default {
                 this.showActionPopup('请选择品牌！');
                 return;
             }
-            this.setSelectedBrand(brand);
+            this.set_selected_brand(brand);
             this.$refs.brandPopup.turn();
             this.$refs.guidePopup.turn(true);
         },
@@ -216,7 +203,7 @@ export default {
                 this.showActionPopup('请选择导购员！');
                 return;
             }
-            this.setSelectedGuide(guide);
+            this.set_selected_guide(guide);
             this.$refs.guidePopup.turn();
         },
         // 搜索商品
@@ -285,7 +272,7 @@ export default {
                 this.$http.get_vip_coupon({
                     vpdm: selectedVIP.vip_code_unique,
                     customer_code: selectedVIP.customer_sn,
-                    brand_code: this.selectedBrand.brand.code
+                    brand_code: this.selected_brand.brand.code
                 }).then(res => {
                     this.couponSelect(res.data.data);
                 }).catch(err => {

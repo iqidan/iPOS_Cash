@@ -45,7 +45,6 @@ export default {
     data() {
         return {
             filters: {
-                shop_code: this.shopConfig.shopCode,
                 page: 1,
                 page_size: 10
             },
@@ -55,7 +54,10 @@ export default {
         };
     },
     computed: {
-        ...mapState('authorize', ['shopConfig'])
+        ...mapState({
+            shop_config: 'shop_config',
+            shop_code: state => state.shopConfig.shop_config.shopCode
+        })
     },
     methods: {
         getOrders() {
@@ -84,7 +86,7 @@ export default {
         }
     },
     created() {
-        console.log(this.shopConfig);
+        console.log(this.shop_config);
         // this.getOrders();
     }
 };

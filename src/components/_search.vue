@@ -49,17 +49,17 @@ export default {
     },
     computed: {
         ...mapState({
-            selectedBrand: state => state.shopConfig.selectedBrand,
-            selectedGuide: state => state.shopConfig.selectedGuide,
-            shop_code: state => state.shopConfig.shopConfig.shop_code,
+            selected_brand: state => state.shopConfig.selected_brand,
+            selected_guide: state => state.shopConfig.selected_guide,
+            shop_code: state => state.shopConfig.shop_config.shop_code,
             selected_vip: state => state.vip.selected_vip,
-            update_vip_list: state => state.shopConfig.shopConfig.update_vip
+            update_vip_list: state => state.shopConfig.shop_config.update_vip
         }),
         ...mapGetters(['getSearchTypeValue'])
     },
     data() {
         return {
-            checked: this.$store.state.search.selectedSearchType,
+            checked: this.$store.state.search.selected_search_type,
             keyWords: '',
             popupVisible: false,
             goods_cart: {
@@ -88,8 +88,8 @@ export default {
                 .search_goods({ sptm: this.keyWords })
                 .then(res => {
                     if (res.data.data && res.data.data[0]) {
-                        if (res.data.data[0].ppdm !== this.selectedBrand.brand.code) {
-                            this.$toast(`不允许录入,非${this.selectedBrand.brand.name}品牌商品!`);
+                        if (res.data.data[0].ppdm !== this.selected_brand.brand.code) {
+                            this.$toast(`不允许录入,非${this.selected_brand.brand.name}品牌商品!`);
                             return false;
                         }
                         return res.data.data[0];
@@ -137,7 +137,7 @@ export default {
                     if (res.sl === undefined) {
                         res.sl = 1;
                     }
-                    res.guide = this.selectedGuide;
+                    res.guide = this.selected_guide;
                     // this.goods_cart.goods.push(res);
                     // this.goodsCart.refersh_cart();
                     this.$emit('search', res);
@@ -161,11 +161,9 @@ export default {
                     if (res.status === 1) {
                         let member = res.data;
                         is_vip_of_current_brand = member.brands.some(v => {
-                            if (v.brandid === this.selectedBrand.brand.code) {
-                                this.selectedBrand.customer_level =
-                                    v.loyaltytieridname;
-                                this.selectedBrand.customer_level_id =
-                                    v.loyaltytierid;
+                            if (v.brandid === this.selected_brand.brand.code) {
+                                this.selected_brand.customer_level = v.loyaltytieridname;
+                                this.selected_brand.customer_level_id = v.loyaltytierid;
                                 member.membercard = v.membercard;
                                 member.customer_level = v.loyaltytieridname;
                                 return true;
@@ -187,7 +185,7 @@ export default {
                         } else {
                             this.$toast(
                                 '该会员不属于' +
-                                    this.selectedBrand.brand.name +
+                                    this.selected_brand.brand.name +
                                     '品牌会员!'
                             );
                         }
@@ -243,7 +241,7 @@ export default {
                 updateVip = null;
 
             updateVipArr.some(v => {
-                if (v.brand === this.selectedBrand.brand.code) {
+                if (v.brand === this.selected_brand.brand.code) {
                     updateVip = v;
                     return true;
                 }

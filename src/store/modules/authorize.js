@@ -49,8 +49,8 @@ const actions = {
         return api.login(param).then(res => {
             const config = formatShopConfig(res);
             commit('setToken', config.token);
-            commit('setShopConfig', config);
-            commit('setBrandList', config.brand);
+            commit('set_shop_config', config);
+            commit('set_brand_list', config.brand);
         });
     }
 };

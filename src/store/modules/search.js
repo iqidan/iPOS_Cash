@@ -21,20 +21,20 @@ const PAY_STATUS = [
 ];
 
 const state = {
-    searchTypeList: PAY_STATUS,
-    selectedSearchType: '商品'
+    search_type_list: PAY_STATUS,
+    selected_search_type: '商品'
 };
 
 const mutations = {
     setType(state, value) {
-        state.selectedSearchType = value;
+        state.selected_search_type = value;
     }
 };
 
 const getters = {
     getSearchTypeValue(state) {
-        let res = state.searchTypeList.filter(type => {
-            return type.value === state.selectedSearchType
+        let res = state.search_type_list.filter(type => {
+            return type.value === state.selected_search_type
         })[0];
         return res.unique;
     }
