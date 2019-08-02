@@ -266,7 +266,7 @@ export default {
         },
         // 跳转到settle(结算)页面
         toSettle() {
-            if (this.goodsCart.good.length) return;
+            if (!this.goodsCart.goods.length) return;
             const selectedVIP = this.selected_vip;
             if (selectedVIP) {
                 this.$http.get_vip_coupon({

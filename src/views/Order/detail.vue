@@ -4,27 +4,27 @@
         <div class="detail-content">
             <div class="caption">订单信息</div>
             <div class="order-detail bd1">
-                <span class="flex-1">订单编号：A024002019070513270</span>
-                <span class="flex-half">店铺：A024</span>
-                <span class="flex-half">收银员：(null)admin</span>
-                <span class="flex-half">数量：5</span>
-                <span class="flex-half">金额：6019</span>
-                <span class="flex-half">vip：</span>
-                <span class="flex-half">找零：</span>
-                <span class="flex-half">备注：</span>
-                <span class="flex-1">制单时间：{{(new Date) | dateFormat('yyyy-MM-dd hh:mm:ss')}}</span>
+                <span class="flex-1">订单编号：{{order.order_code}}</span>
+                <span class="flex-half">店铺：{{order.shop_code}}</span>
+                <span class="flex-half">收银员：{{order.trade_user_name}}</span>
+                <span class="flex-half">数量：{{order.num}}</span>
+                <span class="flex-half">金额：{{order.final_money}}</span>
+                <span class="flex-half">vip：{{order.vip_code}}</span>
+                <span class="flex-half">找零：{{order.change_money}}</span>
+                <span class="flex-half">备注：{{order.remark}}</span>
+                <span class="flex-1">制单时间：{{order.record_time}}</span>
             </div>
             <div class="caption">商品信息</div>
             <div class="goods-list">
                 <ul>
-                    <li class="good bd1" v-for="item in [1,2,3,5,9]" :key="item">
+                    <li class="good bd1" v-for="g in orderDetail.record_detail" :key="g.sku">
                         <p>
-                            <span>围巾</span>
-                            <span class="red">￥791</span>
+                            <span>{{g.goods_name}}</span>
+                            <span class="red">{{g.price|currency}}</span>
                         </p>
                         <p>
-                            <span>条码|规格：MA151ORS52F17F | 菱格花卉色 F</span>
-                            <span>x 1</span>
+                            <span>条码|规格：{{g.sku}} | {{g.color_name}} {{g.size_name}}</span>
+                            <span>x {{g.num}}</span>
                         </p>
                     </li>
                 </ul>
@@ -57,7 +57,8 @@ export default {
     },
     data() {
         return {
-            orderId: this.$route.params.order_id
+            order: this.$route.params.order || {},
+            orderDetail: {}
         };
     },
     methods: {
@@ -66,7 +67,13 @@ export default {
         }
     },
     created() {
-        // this.getOrders();
+        this.$http.get_order_detail({
+            record_code: this.order.record_code
+        }).then(res => {
+            this.orderDetail = res.data
+        }).catch(() => {
+            this.$toast('订单详情获取失败!');
+        });
     }
 };
 </script>

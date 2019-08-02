@@ -144,6 +144,11 @@ export default {
 
     // 获取vip卡券列表
     get_vip_coupon(params) {
-        return http.post('crm/vip/get_vip_coupon&route=crm', params)
+        return http.post('crm/vip/get_vip_coupon&route=crm', params);
+    },
+
+    // 获取订单详情
+    get_order_detail(params) {
+        return http.post('pos/pos/get_detail', params);
     }
 };

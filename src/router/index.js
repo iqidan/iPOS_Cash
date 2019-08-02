@@ -45,7 +45,7 @@ const router = new Router({
             component: () => import('views/Order/order')
         },
         {
-            path: '/order/detail/:order_id',
+            path: '/order/detail',
             name: 'OrderDetail',
             meta: {
                 title: '订单详情'

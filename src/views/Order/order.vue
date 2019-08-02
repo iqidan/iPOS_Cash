@@ -6,26 +6,31 @@
             :placeholder="'请输入小票单号'"
         />
         <load-container class="list-wrap">
-            <router-link
-                tag="li"
-                class="cell"
-                v-for="(item, index) in orderList"
+                <!-- tag="li"
                 :to="`detail/${item}`"
-                append
-                :key="index * 3 + item"
+                append -->
+            <li
+                class="cell"
+                v-for="item in orderList"
+                :key="item.record_code"
+                @click="toDetail(item)"
             >
                 <div class="cell-level">
-                    <span class="l">单据编号：A024002019071900130</span>
-                    <span class="status">未付款</span>
+                    <span class="l">单据编号：{{item.record_code}}</span>
+                    <span
+                        :class="{'yellow':item.payState==0&&item.status!=9,'green':item.payState!=0, 'red':item.status==9}"
+                        class="status">
+                        {{item.status==9? "已作废" : (item.payState==0?'未付款':'')}}
+                    </span>
                 </div>
                 <div class="cell-level">
-                    <span class="l">2019-07-19 14:33:45</span>
+                    <span class="l">{{item.record_time}}</span>
                     <div>
-                        <span>数量：1 金额：</span
-                        ><span class="money">￥1000</span>
+                        <span>数量：{{item.num}} 金额：</span>
+                        <span class="money">{{item.final_money|currency}}</span>
                     </div>
                 </div>
-            </router-link>
+            </li>
         </load-container>
     </div>
 </template>
@@ -45,7 +50,7 @@ export default {
     data() {
         return {
             filters: {
-                page: 1,
+                page: 0,
                 page_size: 10
             },
             selectList: ['所有', '未完成'],
@@ -60,28 +65,50 @@ export default {
         })
     },
     methods: {
-        getOrders() {
-            return api.get_order_list(this.filters).then(res => {
+        /**
+         * @param {Boolean} isRefresh [是否重置列表(刷新)]
+         */
+        getOrders(isRefresh = false) {
+            if (isRefresh) {
+                this.filters.page = 1;
+            } else {
                 this.filters.page++;
-                if (this.orderList.length >= res.count) {
+            }
+            return api.get_order_list(this.filters).then(res => {
+                if (this.orderList.length >= res.data.count) {
                     this.allLoaded = true;
                 }
+                return res.data.data;
             });
         },
         pullRefresh() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    this.orderList = new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000));
-                    resolve();
-                }, 2000);
+            // return new Promise((resolve) => {
+            //     setTimeout(() => {
+            //         this.orderList = new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000));
+            //         resolve();
+            //     }, 2000);
+            // });
+            return this.getOrders(true).then(res => {
+                this.orderList = res || [];
             });
         },
         loadMore() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    this.orderList.push(...new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000)));
-                    resolve();
-                }, 2000);
+            // return new Promise((resolve) => {
+            //     setTimeout(() => {
+            //         this.orderList.push(...new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000)));
+            //         resolve();
+            //     }, 2000);
+            // });
+            return this.getOrders().then(res => {
+                this.orderList = this.orderList.concat(res || []);
+            });
+        },
+        toDetail(order) {
+            this.$router.push({
+                name: 'OrderDetail',
+                params: {
+                    order
+                }
             });
         }
     },
@@ -120,7 +147,18 @@ export default {
                 flex: 1;
             }
             .status {
-                color: #f6a623;
+                &.red {
+                    color: #ff3b1b;
+                }
+
+                &.green {
+                    color: #21b94e;
+                }
+
+                &.yellow {
+                    color: #f6a623;
+                }
+
             }
             .money {
                 color: #444;

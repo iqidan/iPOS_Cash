@@ -96,7 +96,8 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     function(response) {
         loading.close();
-        if (response.data.status === 1) {
+        // eslint-disable-next-line
+        if (response.data.status == 1) {
             return response.data;
         } else {
             return Promise.reject(response.data);

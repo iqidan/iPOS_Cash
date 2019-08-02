@@ -7,8 +7,7 @@
     >
         <ul
             v-infinite-scroll="loadMore"
-            infinite-scroll-distance="50"
-            infinite-scroll-disabled="noMore"
+            :infinite-scroll-disabled="noMore"
         >
             <slot />
         </ul>
@@ -59,11 +58,13 @@ export default {
             });
         },
         loadMore() {
+            if (this.loading) return;
             this.noMore = true;
             this.loading = true;
             this.$parent.loadMore().then(noMore => {
                 this.noMore = Boolean(noMore);
             }).finally(() => {
+                this.noMore = false;
                 this.loading = false;
             });
         }
