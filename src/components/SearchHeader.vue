@@ -49,6 +49,7 @@ export default {
 .search {
     flex: 1;
     height: 68px;
+    line-height: 68px;
     border-radius: 34px;
     margin-left: 10px;
 }
