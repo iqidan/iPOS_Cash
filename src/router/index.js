@@ -31,9 +31,12 @@ const router = new Router({
             component: Cashier
         },
         {
-            path: '/cashier/test',
-            name: 'Test',
-            component: () => import('views/Cashier/test')
+            path: '/coupon/select',
+            name: 'CouponSelect',
+            meta: {
+                title: '促销优惠选择'
+            },
+            component: () => import('views/Coupon/select')
         },
         // Order(订单)
         {

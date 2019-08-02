@@ -5,10 +5,11 @@ import 'reset-css';
 import '~/scss/global.scss';
 import http from './api';
 import store from './store';
-import { Toast, Indicator, InfiniteScroll } from 'mint-ui';
+import { Toast, Indicator, InfiniteScroll, Button } from 'mint-ui';
 import '@/filters';
 
 Vue.use(InfiniteScroll);
+Vue.component(Button.name, Button);
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = http;

@@ -1,7 +1,6 @@
 <template>
     <div class="cashier">
         <search-header
-            @changeFilter="selectFilterItem"
             @search="searchGoods"
             :select-list="searchTypeList"
             :placeholder="'搜索商品'"/>
@@ -19,7 +18,7 @@
                     <span>折扣：{{selected_vip.rebate}}</span>
                 </div>
             </div>
-            <ul class="goods-list">
+            <ul class="goods-list" v-if="goodsCart.goods && goodsCart.goods.length">
                 <li v-for="(good, index) in goodsCart.goods" :key="good.sku">
                     <div class="good-detail">
                         <p class="good-title">
@@ -68,7 +67,7 @@
                     <span>{{totalNum}}</span>
                 </div>
             </div>
-            <button class="btn">确定</button>
+            <button class="btn" :class="{'active': goodsCart.goods.length}" @click="toSettle()">确定</button>
         </div>
         <!-- 底部总计 end -->
 
@@ -130,7 +129,8 @@
 
 <script>
 // import api from '@/api';
-import { Popup, Button, MessageBox } from 'mint-ui';
+import bshelp from '@/utils/bshelp';
+import { Popup, MessageBox } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
 import SelectorActions from 'components/SelectorActions';
 import { mapMutations, mapState } from 'vuex';
@@ -139,7 +139,6 @@ export default {
     name: 'Cashier',
     components: {
         MtPopup: Popup,
-        MtButton: Button,
         SearchHeader,
         SelectorActions,
     },
@@ -193,6 +192,7 @@ export default {
     },
     methods: {
         ...mapMutations(['setSelectedGuide', 'setSelectedBrand']),
+        // 弹框显示
         showActionPopup(msg) {
             this.actionVisiable = true;
             this.actionMessage = msg;
@@ -200,8 +200,7 @@ export default {
                 this.actionVisiable = false;
             }, 2000);
         },
-        selectFilterItem() {
-        },
+        // 选择品牌弹框确定
         selectBrand(brand) {
             if (!brand) {
                 this.showActionPopup('请选择品牌！');
@@ -211,6 +210,7 @@ export default {
             this.$refs.brandPopup.turn();
             this.$refs.guidePopup.turn(true);
         },
+        // 选择导购员弹框确定
         selectGuide(guide) {
             if (!guide) {
                 this.showActionPopup('请选择导购员！');
@@ -219,6 +219,7 @@ export default {
             this.setSelectedGuide(guide);
             this.$refs.guidePopup.turn();
         },
+        // 搜索商品
         searchGoods(good) {
             const goodInCartIndex = this.goodsCart.goods.findIndex(g => g.sku === good.sku);
             if (goodInCartIndex >= 0) {
@@ -228,11 +229,13 @@ export default {
             }
             this.refreshCart();
         },
+        // 显示编辑弹框
         showGoodEditPannel(good) {
             this.edittedGoodPrice = '';
             this.isEditGood = true;
             this.edittingGood = good;
         },
+        // 修改商品数量
         changeGoodNum(index, num = 0) {
             // this.goodsCart.goods[index].sl += num;
             // this.refreshCart()
@@ -257,6 +260,7 @@ export default {
                 }).catch(() => {});
             }
         },
+        // 弹框改变选中商品信息
         changeGoodInCart() {
             this.edittingGood.dj
                 = this.goodsCart.goods.find(good => this.edittingGood.sku === good.sku).dj
@@ -264,6 +268,7 @@ export default {
             this.isEditGood = false;
             this.refreshCart();
         },
+        // 刷新购物车
         refreshCart() {
             this.totalNum = 0;
             this.totalMoney = 0;
@@ -271,6 +276,93 @@ export default {
                 this.totalNum = good.sl;
                 this.totalMoney = good.sl * good.dj;
             });
+        },
+        // 跳转到settle(结算)页面
+        toSettle() {
+            if (this.goodsCart.good.length) return;
+            const selectedVIP = this.selected_vip;
+            if (selectedVIP) {
+                this.$http.get_vip_coupon({
+                    vpdm: selectedVIP.vip_code_unique,
+                    customer_code: selectedVIP.customer_sn,
+                    brand_code: this.selectedBrand.brand.code
+                }).then(res => {
+                    this.couponSelect(res.data.data);
+                }).catch(err => {
+                    this.$toast('获取优惠券失败!');
+                    this.promotionActive([], []);
+                });
+            }
+        },
+        // 选择优惠券
+        couponSelect(coupons){
+            if(!coupons || coupons.length < 1){
+                this.promotionActive([], [], false);
+                return;
+            }
+
+            let couponList = [];
+            let couponArr = [];
+            coupons.forEach((v, i) => {
+                if(v.coupondetailtype != 50){//手机端支持50类型的优惠券
+                    return ;
+                }
+                let startDate = v.validfrom || v.gaintime;
+                let endDate = v.validto || v.overduetime;
+                let tempCoupon = {
+                    brand: v.brandid,
+                    couponCode: v.couponid,
+                    couponId: v.coupondetailno,
+                    endDate: bshelp.timeStamp2String(new Date(endDate), 'datetime'),
+                    startDate: bshelp.timeStamp2String(new Date(startDate), 'datetime'),
+                    description: v.description,
+                    money: v.money,
+                    discount: v.discount,
+                    coupondetailtype: v.coupondetailtype,
+                    subject: v.subject,
+
+                };
+                // if(v.coupondetailtype == 50){
+                tempCoupon.avaliableQuata = tempCoupon.money;
+                // }
+                couponList.push(tempCoupon);
+            });
+
+            if(!is_active){//需要筛选?
+                if(couponList.length < 1){//没有符合类型的优惠券?
+                    return this.promotionActive([], [], false);
+                }
+
+                return this.promotionActive(couponList, [], true);
+            }
+
+            // 组装coupons选择列表数据
+            coupons.forEach((v, i) => {
+                let tempCoupon = v;
+                // if(v.coupondetailtype == 50){
+                tempCoupon.avaliableQuata = v.money;
+                // }
+                couponList.push(tempCoupon);
+                couponArr.push({
+                    checked: false,
+                    disabled:false,
+                    coupondetailtype:v.coupondetailtype,
+                    label: v.subject+ " | 折扣/金额:" + (v.discount?v.discount:v.money) + " | "+ tempCoupon.startDate+"~"+tempCoupon.endDate+"",
+                    id:v.couponId,
+                    value: v.couponId
+                });
+            });
+
+            this.$router.push({
+                name: 'CouponSelect',
+                params: {
+                    coupon_list: coupons
+                }
+            });
+        },
+        // 使用促销
+        promotionActive() {
+            // TODO:
         }
     }
 };
@@ -401,7 +493,7 @@ export default {
     width: 100%;
     height: 120px;
     display: flex;
-    @include border-1px(#c8c7cc, bottom, top);
+    @include border-1px(#c8c7cc, top);
     position: absolute;
 }
 
@@ -428,8 +520,8 @@ export default {
     font-size: 36px;
     color: #fff;
     background-color: #d0d0d0;
-    .active {
-        color: #e30107;
+    &.active {
+        background-color: #e30107;
     }
 }
 

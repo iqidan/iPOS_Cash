@@ -55,7 +55,7 @@
 
 <script>
 // import api from '@/api';
-import { Button, Popup } from 'mint-ui';
+import { Popup } from 'mint-ui';
 import PlainHeader from 'components/PlainHeader';
 import Payments from './components/payment';
 
@@ -64,7 +64,6 @@ export default {
     components: {
         Payments,
         PlainHeader,
-        MtButton: Button,
         MtPopup: Popup
     },
     data() {

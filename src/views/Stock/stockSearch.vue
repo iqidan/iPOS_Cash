@@ -16,14 +16,12 @@
 <script>
 import Scanner from 'components/Scanner';
 import PlainHeader from 'components/PlainHeader';
-import { Button } from 'mint-ui';
 
 export default {
     name: 'Stock',
     components: {
         Scanner,
-        PlainHeader,
-        MtButton: Button
+        PlainHeader
     }
 };
 </script>

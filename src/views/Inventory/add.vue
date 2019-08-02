@@ -40,14 +40,12 @@
 <script>
 import SelectorActions from 'components/SelectorActions';
 import PlainHeader from 'components/PlainHeader';
-import { Button } from 'mint-ui';
 
 export default {
     name: 'Inventory',
     components: {
         PlainHeader,
-        SelectorActions,
-        MtButton: Button
+        SelectorActions
     },
     data() {
         return {

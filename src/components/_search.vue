@@ -201,7 +201,6 @@ export default {
         },
         selectFilter() {
             this.popupVisible = false;
-            this.$emit('changeFilter', this.getSearchTypeValue);
             this.setType(this.checked);
         },
         //检查vip相关信息

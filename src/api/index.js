@@ -137,7 +137,13 @@ export default {
         return http.post('pos/pos/get_receipt_list', params);
     },
 
+    // 更新vipxinxi
     update_vip(params) {
         return http.post('crm/vip/update_vip&route=crm', params);
+    },
+
+    // 获取vip卡券列表
+    get_vip_coupon(params) {
+        return http.post('crm/vip/get_vip_coupon&route=crm', params)
     }
 };

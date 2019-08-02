@@ -48,14 +48,12 @@
 
 <script>
 // import api from '@/api';
-import { Button } from 'mint-ui';
 import PlainHeader from 'components/PlainHeader';
 
 export default {
     name: 'OrderDetail',
     components: {
-        PlainHeader,
-        MtButton: Button
+        PlainHeader
     },
     data() {
         return {

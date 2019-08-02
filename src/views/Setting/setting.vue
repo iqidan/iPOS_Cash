@@ -12,13 +12,10 @@
 </template>
 
 <script>
-import { Button, MessageBox } from 'mint-ui';
+import { MessageBox } from 'mint-ui';
 
 export default {
     name: 'Setting',
-    components: {
-        MtButton: Button
-    },
     methods: {
         exit() {
             MessageBox({

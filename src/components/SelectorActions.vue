@@ -25,14 +25,13 @@
 </template>
 
 <script>
-import { Popup, Radio, Button } from 'mint-ui';
+import { Popup, Radio } from 'mint-ui';
 import utils from '@/utils';
 
 export default {
     name: 'SelectorActions',
     components: {
         MtRadio: Radio,
-        MtButton: Button,
         MtPopup: Popup
     },
     props: {
