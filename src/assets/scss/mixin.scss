@@ -33,6 +33,7 @@
 /* 伪元素 scale方案 (缺陷：伪元素会遮住内容) */
 @mixin border-1px($color: #000, $position...) {
     position: relative;
+    margin: 1px;
     @each $p in $position {
         border-#{$p}: 1px solid $color;
     }
@@ -47,7 +48,7 @@
             transform-origin: 0 0;
 
             @if length($position) > 1 {
-                width: 200%;
+                width: calc(200% - 2px);
                 height: 200%;
                 transform: scale(0.5);
                 left: 0;
@@ -66,7 +67,7 @@
                 left: 0;
                 #{$position}: 0;
                 height: 1px;
-                width: 200%;
+                width: calc(200% - 2px);
                 transform: scale(0.5);
                 border-#{$position}: 1px solid $color;
             }

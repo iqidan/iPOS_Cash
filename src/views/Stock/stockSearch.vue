@@ -37,13 +37,17 @@ export default {
         font-size: 34px;
         height: 100px;
         line-height: 100px;
-        background-color: transparent;
+        background-color: #fff;
         @include border-1px(#c8c7cc, top, bottom);
         input {
             flex: 1;
-            align-self: stretch;
+            z-index: 1;
+            align-self: center;
+            height: 90px;
+            padding: 0 0 0 40px;
         }
         .scanner {
+            z-index: 1;
             color: $color-default;
             font-size: 48px;
         }
