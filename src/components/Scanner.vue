@@ -3,8 +3,24 @@
 </template>
 
 <script>
+import utils from '@/utils';
+
 export default {
-    name: 'Scanner'
+    name: 'Scanner',
+    data() {
+        return {
+            isInScanning: true
+        }
+    },
+    methods: {
+        scan() {
+            if (this.isInScanning) return;
+            utils.scan(data => {
+                this.isInScanning = false;
+                this.$emit('scan', data);
+            });
+        }
+    }
 }
 </script>
 

@@ -31,10 +31,7 @@ export default {
     },
     //查询邻店
     get_friend_shop(params) {
-        return http.post('index/route&api=base/shop/get_friend_shop_u', {
-            shop_code: this.shopInfo.shop_code,
-            ...params
-        });
+        return http.post('index/route&api=base/shop/get_friend_shop_u', params);
     },
     //查询库存
     get_goods_stock(params) {
@@ -150,5 +147,10 @@ export default {
     // 获取订单详情
     get_order_detail(params) {
         return http.post('pos/pos/get_detail', params);
+    },
+
+    // 查询友好商店商品库存
+    get_friend_shop_goods(params) {
+        return http.post('base/shop/get_friend_shop_goods', params);
     }
 };

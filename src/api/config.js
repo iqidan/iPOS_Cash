@@ -120,7 +120,7 @@ axiosInstance.interceptors.response.use(
  * @returns {Promise} [回调参数为接口数据]
  */
 const http = {
-    post: function(url, data, config = {}) {
+    post: function(url, data = {}, config = {}) {
         data.shop_code = BShelp.getStorage('shop_code');
         // 登录接口参数格式不同
         if (config.isLogin) {
