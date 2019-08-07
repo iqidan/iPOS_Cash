@@ -40,6 +40,18 @@
                 </div>
                 <input class="search-num" type="number" value="1" />
             </div>
+
+            <ul class="good-list">
+                <li class="content" v-for="g in record_detail" :key="g.sku">
+                    <p class="bold">{{g.goods_name}}<p>
+                    <p>条码：{{g.sku}}</p>
+                    <p>规格：{{g.color_name}} {{g.size_name}}
+                    </p>
+                    <p>价格：&yen;{{g.price}}
+                    <span class="num">{{g.num}}</span>
+                    </p>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -59,10 +71,11 @@ export default {
     data() {
         return {
             record: this.$route.params.record,
+            record_detail: [],
             params: {
                 shop_code: this.$store.state.shopConfig.shop_code,
                 record_code: this.$route.params.record.record_code,
-                show_type: 0, 
+                show_type: 0,
                 page: 1,
                 size: 15,
                 record_id:this.$route.params.record.record_id
@@ -70,13 +83,13 @@ export default {
         }
     },
     created() {
-        console.log(this.$route)
+        this.getInventoryList();
     },
     methods: {
         getInventoryList() {
-            this.$http.get_stock_check_detail({
-
-            })
+            this.$http.get_stock_check_detail(this.params).then(res => {
+                this.record_detail = res.data.record_detail;
+            });
         }
     }
 };
@@ -103,6 +116,8 @@ export default {
 
 .detail-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .find-stock {
@@ -111,6 +126,7 @@ export default {
     line-height: 120px;
     align-items: center;
     font-size: 28px;
+    @include border-1px(#c8c7cc, bottom);
     input {
         font-size: inherit;
     }
@@ -144,6 +160,22 @@ export default {
         line-height: 50px;
         background: rgba(0, 0, 0, 0.03);
         color: #ff3b1b;
+    }
+}
+
+.good-list {
+    font-size: 28px;
+    color: #8e9093;
+    line-height: 1.5;
+    li {
+        background-color: #fff;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        @include border-1px(#c8c7cc, bottom);
+        .num {
+            float: right;
+            color: #444;
+        }
     }
 }
 </style>
