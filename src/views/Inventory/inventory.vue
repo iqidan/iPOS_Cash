@@ -5,12 +5,11 @@
         </plain-header>
         
         <load-container class="inventory-content">
-            <router-link
-                tag="li"
-                to="detail"
-                append
+            <li
                 v-for="order in orderList"
-                :key="order.record_code">
+                :key="order.record_code"
+                @click="toDetail(order)"
+            >
                 <info class="info">
                     <p>
                         <span>单据编号：<span class="bd">{{order.record_code}}</span></span>
@@ -30,7 +29,7 @@
                         <span>备注：{{order.remark}}</span>
                     </p>
                 </info>
-            </router-link>
+            </li>
         </load-container>
     </div>
 </template>
@@ -64,6 +63,14 @@ export default {
     methods: {
         toAdd() {
             this.$router.push('/inventory/add');
+        },
+        toDetail(record) {
+            this.$router.push({
+                name: 'InventoryDetail',
+                params: {
+                    record
+                }
+            });
         },
         getInventoryList(isRefresh = false) {
             if (isRefresh) {

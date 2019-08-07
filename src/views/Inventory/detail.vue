@@ -5,37 +5,26 @@
             <div class="caption content">单据信息</div>
             <info>
                 <p>
-                    <span
-                        >单据编号：<span class="bd"
-                            >PDD2019071800092</span
-                        ></span
+                    <span>单据编号：<span class="bd">{{record.record_code}}</span></span>
+                </p>
+                <p>
+                    <span>关联编号：<span>{{record.record_code}}</span></span>
+                </p>
+                <p>
+                    <span>区位：<span>{{record.quwei}}</span></span>
+                </p>
+                <p>
+                    <span>库位：<span>{{record.kwmc}}</span></span>
+                </p>
+                <p>
+                    <span>日期：<span>{{record.record_time}}</span></span
                     >
                 </p>
                 <p>
-                    <span>关联编号：<span>PDD2019071800092</span></span>
+                    <span>数量/金额：<span class="bd currency">{{record.num}} / &yen;{{record.money?record.money:0}}</span></span>
                 </p>
                 <p>
-                    <span>区位：<span>aaa</span></span>
-                </p>
-                <p>
-                    <span>库位：<span>默认库位</span></span>
-                </p>
-                <p>
-                    <span
-                        >日期：<span>{{
-                            new Date() | dateFormat("yyyy-MM-dd hh:mm:ss")
-                        }}</span></span
-                    >
-                </p>
-                <p>
-                    <span
-                        >数量/金额：<span class="bd currency"
-                            >0 /￥0</span
-                        ></span
-                    >
-                </p>
-                <p>
-                    <span>备注：<span>哈哈哈哈</span></span>
+                    <span>备注：<span>{{record.remark}}</span></span>
                 </p>
             </info>
             <div class="caption content">商品信息</div>
@@ -66,6 +55,29 @@ export default {
         Info,
         Scanner,
         PlainHeader
+    },
+    data() {
+        return {
+            record: this.$route.params.record,
+            params: {
+                shop_code: this.$store.state.shopConfig.shop_code,
+                record_code: this.$route.params.record.record_code,
+                show_type: 0, 
+                page: 1,
+                size: 15,
+                record_id:this.$route.params.record.record_id
+            }
+        }
+    },
+    created() {
+        console.log(this.$route)
+    },
+    methods: {
+        getInventoryList() {
+            this.$http.get_stock_check_detail({
+
+            })
+        }
     }
 };
 </script>
