@@ -38,6 +38,8 @@ const mutations = {
         let config = formatShopConfig(shopConfig);
         state.shop_config = config;
         BShelp.setStorage('shop_config', config);
+        state.shop_code = config.shop_code;
+        BShelp.setStorage('shop_code', config.shop_code);
     },
     // 设置导购列表
     set_guide_list(state, guideList) {

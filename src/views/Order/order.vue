@@ -51,10 +51,10 @@ export default {
         return {
             filters: {
                 page: 0,
-                page_size: 10
+                page_size: 15
             },
             selectList: ['所有', '未完成'],
-
+            hasNoMore: false,
             orderList: []
         };
     },
@@ -75,32 +75,20 @@ export default {
                 this.filters.page++;
             }
             return api.get_order_list(this.filters).then(res => {
-                if (this.orderList.length >= res.data.count) {
-                    this.allLoaded = true;
-                }
-                return res.data.data;
+                const hasNoMore = res.data.page >= res.data.page_count;
+                return [res.data.data, hasNoMore];
             });
         },
         pullRefresh() {
-            // return new Promise((resolve) => {
-            //     setTimeout(() => {
-            //         this.orderList = new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000));
-            //         resolve();
-            //     }, 2000);
-            // });
-            return this.getOrders(true).then(res => {
-                this.orderList = res || [];
+            return this.getOrders(true).then(([list, hasNoMore]) => {
+                this.orderList = list || [];
+                return hasNoMore;
             });
         },
         loadMore() {
-            // return new Promise((resolve) => {
-            //     setTimeout(() => {
-            //         this.orderList.push(...new Array(10).fill('1').map(() => Math.floor(Math.random()*1000000)));
-            //         resolve();
-            //     }, 2000);
-            // });
-            return this.getOrders().then(res => {
-                this.orderList = this.orderList.concat(res || []);
+            return this.getOrders().then(([list, hasNoMore]) => {
+                this.orderList = this.orderList.concat(list || []);
+                return hasNoMore;
             });
         },
         toDetail(order) {

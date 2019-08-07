@@ -7,7 +7,7 @@
     >
         <ul
             v-infinite-scroll="loadMore"
-            :infinite-scroll-disabled="noMore"
+            infinite-scroll-disabled="noMore"
         >
             <slot />
         </ul>
@@ -62,9 +62,12 @@ export default {
             this.noMore = true;
             this.loading = true;
             this.$parent.loadMore().then(noMore => {
+                console.log('hasNoMore is: ' + noMore);
                 this.noMore = Boolean(noMore);
+            }).catch(() => {
+                console.log('failed =====');
+                this.noMore = true;
             }).finally(() => {
-                this.noMore = false;
                 this.loading = false;
             });
         }
