@@ -29,7 +29,7 @@
             </info>
             <div class="caption content">商品信息</div>
             <div class="find-stock content">
-                <scanner class="scanner" />
+                <scanner class="scanner" v-if="record.is_sure==0&&record_task.is_stop!=true"/>
                 <div class="search">
                     <i class="icon-search" />
                     <input
@@ -41,7 +41,7 @@
                 <input class="search-num" type="number" value="1" />
             </div>
 
-            <ul class="good-list">
+            <load-container class="good-list">
                 <li class="content" v-for="g in record_detail" :key="g.sku">
                     <p class="bold">{{g.goods_name}}<p>
                     <p>条码：{{g.sku}}</p>
@@ -51,13 +51,14 @@
                     <span class="num">{{g.num}}</span>
                     </p>
                 </li>
-            </ul>
+            </load-container>
         </div>
     </div>
 </template>
 
 <script>
 import PlainHeader from 'components/PlainHeader';
+import LoadContainer from 'components/LoadContainer';
 import Info from './components/OrderInfo';
 import Scanner from 'components/Scanner';
 
@@ -66,29 +67,59 @@ export default {
     components: {
         Info,
         Scanner,
-        PlainHeader
+        PlainHeader,
+        LoadContainer
     },
     data() {
         return {
             record: this.$route.params.record,
             record_detail: [],
+            record_task: {},
             params: {
                 shop_code: this.$store.state.shopConfig.shop_code,
                 record_code: this.$route.params.record.record_code,
                 show_type: 0,
-                page: 1,
+                page: 0,
                 size: 15,
                 record_id:this.$route.params.record.record_id
-            }
+            },
+            hasNoMore: false
         }
     },
     created() {
-        this.getInventoryList();
+        this.getGoodsList();
     },
     methods: {
-        getInventoryList() {
-            this.$http.get_stock_check_detail(this.params).then(res => {
+        getGoodsList(isRefresh = false) {
+            if (this.hasNoMore) {
+                return Promise.resolve();
+            }
+            this.hasNoMore = true;
+            return this.$http.get_stock_check_detail(this.params).then(res => {
                 this.record_detail = res.data.record_detail;
+                this.record = res.data.record;
+                this.$http.get_stock_task_list({
+                    record_code: res.data.record.relation_code,
+                    store_code: this.params.shop_code,
+                    size: 1,
+                    page: 1
+                }).then(res2 => {
+                    this.record_task = res2.data.data[0];
+                });
+            }).catch(() => {
+                this.params.page--;
+            }).finally(() => {
+            });
+        },
+        loadMore() {
+            return this.getGoodsList().then(() => {
+                return this.hasNoMore;
+            });
+        },
+        pullRefresh() {
+            return this.getGoodsList(true).then(() => {
+                this.hasNoMore = false;
+                return this.hasNoMore;
             });
         }
     }
