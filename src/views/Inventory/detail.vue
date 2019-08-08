@@ -90,7 +90,7 @@ export default {
         this.getGoodsList();
     },
     methods: {
-        getGoodsList(isRefresh = false) {
+        getGoodsList() {
             if (this.hasNoMore) {
                 return Promise.resolve();
             }

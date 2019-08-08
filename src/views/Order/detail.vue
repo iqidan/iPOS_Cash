@@ -4,7 +4,7 @@
         <div class="detail-content">
             <div class="caption">订单信息</div>
             <div class="order-detail bd1">
-                <span class="flex-1">订单编号：{{order.order_code}}</span>
+                <span class="flex-1">订单编号：{{order.record_code}}</span>
                 <span class="flex-half">店铺：{{order.shop_code}}</span>
                 <span class="flex-half">收银员：{{order.trade_user_name}}</span>
                 <span class="flex-half">数量：{{order.num}}</span>
@@ -20,25 +20,29 @@
                     <li class="good bd1" v-for="g in orderDetail.record_detail" :key="g.sku">
                         <p>
                             <span>{{g.goods_name}}</span>
-                            <span class="red">{{g.price|currency}}</span>
+                            <span class="red">{{g.price|currency({precision:0})}}</span>
                         </p>
                         <p>
-                            <span>条码|规格：{{g.sku}} | {{g.color_name}} {{g.size_name}}</span>
+                            <span class="line1">条码|规格：{{g.sku}} | {{g.color_name}} {{g.size_name}}</span>
                             <span>x {{g.num}}</span>
                         </p>
                     </li>
                 </ul>
             </div>
             <div class="caption">结算信息</div>
-            <div class="currency bd1">
-                <span>现金支付</span>
-                <span class="red">￥6019</span>
+            <div
+                v-for="pay in orderDetail.payment"
+                :key="pay.trade_type_code"
+                class="currency bd1"
+            >
+                <span>{{pay.trade_type_name}}</span>
+                <span class="red">{{pay.money|currency({precision:0})}}</span>
             </div>
             <div class="summary bd1">
                 <span>合计</span>
-                <span class="red">￥6019</span>
+                <span class="red">{{orderDetail.record && orderDetail.record.final_money|currency({precision:0})}}</span>
             </div>
-            <div class="btns bd1">
+            <div v-if="!(!orderDetail.record||!(orderDetail.record.status==1&&orderDetail.record.payState==0))&&!is_stop" class="btns bd1">
                 <mt-button class="btn" type="danger">终止</mt-button>
                 <mt-button class="btn" type="primary" @click="pay">付款</mt-button>
             </div>
@@ -58,8 +62,16 @@ export default {
     data() {
         return {
             order: this.$route.params.order || {},
-            orderDetail: {}
+            orderDetail: {},
+            is_stop: false
         };
+    },
+    computed: {
+        canNotPay() {
+            return !this.orderDetail.record
+                || !(this.orderDetail.record.status === 1 && this.orderDetail.record.payState === 0)
+                || this.is_stop;
+        }
     },
     methods: {
         pay() {
@@ -137,6 +149,9 @@ export default {
     p {
         display: flex;
         justify-content: space-between;
+        .line1 {
+            width: 80%;
+        }
     }
     p:first-child {
         font-size: 32px;
