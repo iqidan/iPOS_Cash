@@ -23,6 +23,7 @@ function formatShopConfig (config) {
 }
 
 const state = {
+    shop_code: '',
     shop_config: {},
     guide_list: [],
     selected_guide: null,

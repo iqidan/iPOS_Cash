@@ -38,9 +38,6 @@
 import PlainHeader from 'components/PlainHeader';
 import Info from './components/OrderInfo';
 import LoadContainer from 'components/LoadContainer';
-import { mapState } from 'vuex';
-
-const TEMP_DATA = {"task_id":"acad80a09ed2411cbc7ecdf6e1e9bb26","task_code":"PDRWD2019042400010","record_code":"PDD2019042400005","record_id":"a03ef4dff5784012b52f9394a481acfd","num":2,"money":470,"lastchanged":"2019-04-24 00:00:00","is_sure":1,"cp":"","cpcs":null,"kw_id":null,"kwmc":"默认库位","quwei":"B区","remark":null,"dczy":null}
 
 export default {
     name: 'Inventory',
