@@ -42,6 +42,10 @@ const router = new Router({
         {
             path: '/order',
             name: 'Order',
+            meta: {
+                keepAlive: true,
+                title: '订单'
+            },
             component: () => import('views/Order/order')
         },
         {
@@ -83,7 +87,8 @@ const router = new Router({
             path: '/inventory',
             name: 'Inventory',
             meta: {
-                title: '盘点单'
+                title: '盘点单',
+                keepAlive: true
             },
             component: () => import('views/Inventory/inventory')
         },
@@ -116,7 +121,14 @@ const router = new Router({
             path: '*',
             redirect: '/login'
         }
-    ]
+    ],
+    scrollBehavior (to, from, savedPosition) {
+        if (to.meta.keepAlive) {
+            return { x: 0, y: to.meta.y || 0 }
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
 });
 
 router.beforeEach((to, from, next) => {

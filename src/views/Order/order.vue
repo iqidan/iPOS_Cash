@@ -5,7 +5,7 @@
             :select-list="selectList"
             :placeholder="'请输入小票单号'"
         />
-        <load-container class="list-wrap">
+        <load-container ref="scroll" class="list-wrap" @scroll.native="scroll">
                 <!-- tag="li"
                 :to="`detail/${item}`"
                 append -->
@@ -40,6 +40,7 @@ import api from '@/api';
 import SearchHeader from 'components/SearchHeader';
 import LoadContainer from 'components/LoadContainer';
 import { mapState } from 'vuex';
+import { throttle } from 'lodash';
 
 export default {
     name: 'Order',
@@ -65,6 +66,9 @@ export default {
         })
     },
     methods: {
+        scroll: throttle(function(e) {
+            this.$route.meta.y = e.target.scrollTop;
+        }, 100),
         /**
          * @param {Boolean} isRefresh [是否重置列表(刷新)]
          */
@@ -103,6 +107,14 @@ export default {
     created() {
         console.log(this.shop_config);
         // this.getOrders();
+    },
+    activated() {
+        console.log('actived <<<<<<<');
+        this.$nextTick(() => {
+            if (this.$route.meta.y) {
+                this.$refs.scroll.$el.scrollTo(0, this.$route.meta.y);
+            }
+        });
     }
 };
 </script>
