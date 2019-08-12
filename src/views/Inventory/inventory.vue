@@ -13,7 +13,7 @@
                 <info class="info">
                     <p>
                         <span>单据编号：<span class="bd">{{order.record_code}}</span></span>
-                        <span>{{order.status_str}}</span>
+                        <span>{{order.is_sure|inventoryStatus}}</span>
                     </p>
                     <p>
                         <span>任务编号：{{order.task_code}}</span>
@@ -96,6 +96,57 @@ export default {
                 this.orderList = this.orderList.concat(list || []);
                 return this.hasNoMore;
             });
+        }
+    },
+    filters: {
+        inventoryStatus(is_sure) {
+            let status = String(is_sure);
+            let res = '';
+            switch (status) {
+                case '0':
+                    res = '初始';
+                    break;
+                case '1':
+                    res = '提交';
+                    break;
+                case '2':
+                    res = '审核';
+                    break;
+                case '3':
+                    res = '执行';
+                    break;
+                case '5':
+                    res = '盈亏';
+                    break;
+                case '6':
+                    res = '验收';
+                    break;
+                case '7':
+                    res = '发出';
+                    break;
+                case '8':
+                    res = '完成';
+                    break;
+                case '9':
+                    res = '终止';
+                    break;
+                case '10':
+                    res = '确认';
+                    break;
+                case '12':
+                    res = '入库';
+                    break;
+                case '14':
+                    res = '差异处理';
+                    break;
+                case '15':
+                    res = '差异处理完成';
+                    break;
+                default:
+                    res = '';
+                    break;
+            }
+            return res;
         }
     }
 }

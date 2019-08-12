@@ -28,8 +28,8 @@
                 </p>
             </info>
             <div class="caption content">商品信息</div>
-            <div class="find-stock content">
-                <scanner class="scanner" v-if="record.is_sure==0&&record_task.is_stop!=true"/>
+            <div v-if="!!record.is_sure === false && !!record_task.is_stop !== true" class="find-stock content">
+                <scanner class="scanner"/>
                 <div class="search">
                     <i class="icon-search" />
                     <input
@@ -42,7 +42,12 @@
             </div>
 
             <load-container class="good-list">
-                <li class="content" v-for="g in record_detail" :key="g.sku">
+                <li
+                    class="content"
+                    v-for="g in record_detail"
+                    :key="g.sku"
+                    @click="editGood(g)"
+                >
                     <p class="bold">{{g.goods_name}}<p>
                     <p>条码：{{g.sku}}</p>
                     <p>规格：{{g.color_name}} {{g.size_name}}
@@ -61,6 +66,7 @@ import PlainHeader from 'components/PlainHeader';
 import LoadContainer from 'components/LoadContainer';
 import Info from './components/OrderInfo';
 import Scanner from 'components/Scanner';
+import { MessageBox } from 'mint-ui';
 
 export default {
     name: 'InventoryDetail',
@@ -83,33 +89,108 @@ export default {
                 size: 15,
                 record_id:this.$route.params.record.record_id
             },
-            hasNoMore: false
+            hasNoMore: false,
+            accountChannelId: this.$store.state.shopConfig.shop_config.accountChannelId
         }
     },
     created() {
         this.getGoodsList();
     },
     methods: {
+        // 更新商品库存信息
+        updateGoodStock(good, isEdit = false) {
+            let isExist = false, goods_list = [];
+
+            isExist = this.record_detail.some(
+                v => v.spdm === good.spdm && v.color_code === good.color_code && v.size_code === good.size_code
+            );
+
+            goods_list.push(good);
+
+            const params = {
+                record_code: this.record.record_code,
+                record_detail: goods_list,
+                bill_id: this.record.bill_id,
+                ownerId: this.accountChannelId,
+                kw_id: this.record.kw_id
+            };
+
+            return this.$http.update_stock_detail(params).then(() => {
+                this.$toast('更新数据成功!');
+                // 更新页面显示的主表数据
+                let money = this.record.money || 0;
+                if (!isEdit) {
+                    money += good.num * good.price;
+                    this.record.money = money; 
+                    this.record.num += good.num;
+                }
+                // 更新明细数据
+                if (!isExist) {
+                    this.record_detail.unshift(good);
+                } else {
+                    const currentGood = this.record_detail.find(g => g.spdm === good.spdm && g.color_code === good.color_code && g.size_code === good.size_code)
+                    if (currentGood) {
+                        if (isEdit) {
+                            let changeNum = good.num - currentGood.num;
+                            money += changeNum * good.price;
+                            this.record.money = money; 
+                            this.record.num = this.record.num + changeNum;
+                            currentGood.num = good.num;
+                        } else {
+                            currentGood.num += good.num;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+        },
+        // 获取商品列表
         getGoodsList() {
             if (this.hasNoMore) {
                 return Promise.resolve();
             }
             this.hasNoMore = true;
             return this.$http.get_stock_check_detail(this.params).then(res => {
-                this.record_detail = res.data.record_detail;
-                this.record = res.data.record;
                 this.$http.get_stock_task_list({
                     record_code: res.data.record.relation_code,
                     store_code: this.params.shop_code,
                     size: 1,
                     page: 1
                 }).then(res2 => {
+                    this.record_detail = res.data.record_detail;
+                    this.record = res.data.record;
                     this.record_task = res2.data.data[0];
                 });
             }).catch(() => {
                 this.params.page--;
             }).finally(() => {
             });
+        },
+        // 点击编辑商品
+        editGood(good) {
+            if(!(!!this.record.is_sure === false && !!this.record_task.is_stop !== true)){
+                return;
+            }
+            MessageBox.prompt(
+                `${good.goods_name}(${good.sku})`,
+                '修改数量',
+                {
+                    inputType: 'number',
+                    inputPlaceholder: '请输入商品数量',
+                    inputValue: good.num
+                }
+            ).then(({value}) => {
+                if (value < 0) {
+                    return this.$toast('请输入商品数量(非负数)!');
+                } else if (Number(good.num) === value) {
+                    return;
+                }
+
+                let tmpGood = Object.assign({}, good);
+                this.updateGoodStock(tmpGood, true)
+            }).catch(() => {});
         },
         loadMore() {
             return this.getGoodsList().then(() => {
