@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             tabList: constants.tabList,
-            shown: true
+            shown: false
         };
     },
     watch: {
