@@ -58,7 +58,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['login', 'show_guide_list_popup']),
+        ...mapActions(['login', 'get_guide_list']),
         doLogin() {
             const canLogin = this.isInfoCorrect();
             if (!canLogin) return;
@@ -69,7 +69,7 @@ export default {
             })
                 .then(() => {
                     this.$router.replace('/cashier');
-                    this.show_guide_list_popup({
+                    this.get_guide_list({
                         ty: 2,
                         shop_code: this.shopCode
                     });

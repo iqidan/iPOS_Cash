@@ -1,9 +1,9 @@
 <template>
     <div class="cashier">
-        <search-header
+        <!-- <search-header
             @search="searchGoods"
             :select-list="search_type_list"
-            :placeholder="'搜索商品'"/>
+            :placeholder="'搜索商品'"/> -->
 
         <!-- 中心内容 start -->
         <div class="cashier-content">
@@ -153,16 +153,33 @@ export default {
             edittingGood: {},
             edittedGoodPrice: '',
             totalNum: 0,
-            totalMoney: 0
+            totalMoney: 0,
+            search_type_list: [
+                {
+                    label: '商品',
+                    value: '商品',
+                    unique: '1'
+                },
+                {
+                    label: '会员',
+                    value: '会员',
+                    unique: '2' 
+                },
+                {
+                    label: '优惠券',
+                    value: '优惠券',
+                    unique: '3'
+                }
+            ]
         };
     },
     computed: {
         ...mapState({
-            selected_brand: state => state.shopConfig.selected_brand,
+            selected_brand: state => state.selected_brand,
             selected_vip: state => state.vip.selected_vip,
-            search_type_list: state => state.search.search_type_list,
-            guide_list: state => state.shopConfig.guide_list,
-            brand_list: state => state.shopConfig.brand_list
+            // search_type_list: state => state.search_type_list,
+            guide_list: state => state.guide_list,
+            brand_list: state => state.brand_list
         })
     },
     mounted() {
