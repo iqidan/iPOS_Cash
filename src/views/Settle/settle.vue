@@ -31,7 +31,7 @@
                 <span>数量：0</span>
             </div>
             <mt-button class="btn reset" type="primary">重置</mt-button>
-            <mt-button class="btn pay" type="danger">结算</mt-button>
+            <mt-button class="btn pay" type="danger" @click="settle">结算</mt-button>
         </div>
 
         <mt-popup v-model="showPopup" position="bottom" class="sure-popup">
@@ -76,6 +76,9 @@ export default {
         choosePayment(payment) {
             console.log(payment);
             this.showPopup = true;
+        },
+        settle() {
+            console.log('结算 >>>>>');
         }
     }
 };

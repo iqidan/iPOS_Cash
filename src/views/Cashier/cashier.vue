@@ -266,6 +266,9 @@ export default {
         },
         // 跳转到settle(结算)页面
         toSettle() {
+            this.$router.push({
+                name: 'Settle'
+            })
             if (!this.goodsCart.goods.length) return;
             const selectedVIP = this.selected_vip;
             if (selectedVIP) {

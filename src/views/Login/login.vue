@@ -1,35 +1,27 @@
 <template>
     <div class="login">
         <div class="logo"></div>
-        <!-- <label>
-            店铺号
-            <input type="text" v-model="shopCode" />
-        </label> -->
+
         <mt-field
             class="label"
             label="店铺代码"
             placeholder="请输入店铺代码"
             v-model="shopCode"
         />
-        <!-- <label>
-            用户号
-            <input type="text" v-model="userCode" />
-        </label> -->
+
         <mt-field
             class="label"
             label="用户代码"
             placeholder="请输入用户代码"
             v-model="userCode"
         />
-        <!-- <label>
-            密码
-            <input type="password" v-model="pwd" />
-        </label> -->
+
         <mt-field
             class="label"
             label="密码"
             placeholder="请输入密码"
             v-model="password"
+            type="password"
         />
 
         <label class="label remember-pwd">
