@@ -4,7 +4,7 @@
             @search="onSearch"
             @filterChange="changeFilter"
             :select-list="search_type_list"
-            :placeholder="'搜索商品'"/>
+            :placeholder="holder"/>
 
         <!-- 中心内容 start -->
         <div class="cashier-content">
@@ -129,7 +129,7 @@
 </template>
 
 <script>
-// import api from '@/api';
+import api from '@/api';
 import bshelp from '@/utils/bshelp';
 import { Popup, MessageBox } from 'mint-ui';
 import SearchHeader from 'components/SearchHeader';
@@ -155,19 +155,22 @@ export default {
             edittedGoodPrice: '',
             totalNum: 0,
             totalMoney: 0,
-            saerchType: null,
+            searchType: '1',
             search_type_list: [
                 {
                     label: '商品',
-                    value: '1'
+                    value: '1',
+                    placeholder: '搜索商品'
                 },
                 {
                     label: '会员',
-                    value: '2'
+                    value: '2',
+                    placeholder: '搜索会员'
                 },
                 {
                     label: '优惠券',
-                    value: '3'
+                    value: '3',
+                    placeholder: '搜索优惠券'
                 }
             ]
         };
@@ -179,7 +182,10 @@ export default {
             // search_type_list: state => state.search_type_list,
             guide_list: state => state.guide_list,
             brand_list: state => state.brand_list
-        })
+        }),
+        holder() {
+            return this.search_type_list.find(type => type.value === this.searchType).placeholder
+        }
     },
     mounted() {
         // api.get_user_list({
@@ -194,9 +200,9 @@ export default {
         });
     },
     methods: {
-        ...mapMutations(['set_selected_guide', 'set_selected_brand']),
+        ...mapMutations(['set_selected_guide', 'set_selected_brand', 'set_selected_vip']),
         changeFilter(filter) {
-            console.log(filter);
+            this.searchType = filter.value;
         },
         // 弹框显示
         showActionPopup(msg) {
@@ -226,30 +232,29 @@ export default {
             this.$refs.guidePopup.turn();
         },
         onSearch(keyWords) {
-            switch (this.saerchType) {
+            switch (this.searchType) {
                 case '1':
                     this.searchGoods(keyWords).then(res => {
-                        console.log(res);
-                        return res;
-                    });
+                        this.addGoodToCart(res);
+                    }).catch(() => {});
                     break;
                 case '2':
                     this.searchVip(keyWords).then(res => {
                         console.log(res);
                         return res;
-                    });
+                    }).catch(() => {});
                     break;
                 case '3':
                     this.searchCoupon(keyWords).then(res => {
                         console.log(res);
                         return res;
-                    });
+                    }).catch(() => {});
                     break;
             }
         },
-        searchGoods() {
+        searchGoods(keyWords) {
             return api
-                .search_goods({ sptm: this.keyWords })
+                .search_goods({ sptm: keyWords })
                 .then(res => {
                     if (res.data.data && res.data.data[0]) {
                         if (res.data.data[0].ppdm !== this.selected_brand.brand.code) {
@@ -257,6 +262,9 @@ export default {
                             return false;
                         }
                         return res.data.data[0];
+                    } else {
+                        this.$toast('未搜索到商品');
+                        return Promise.reject();
                     }
                 })
                 .then(res => {
@@ -307,15 +315,14 @@ export default {
                     this.$emit('search', res);
                 });
         },
-        searchVip() {
-            const keyword = this.keyWords;
-            if (!keyword || keyword.length < 3) {
+        searchVip(keyWords) {
+            if (!keyWords || keyWords.length < 3) {
                 this.$toast('请输入会员号!');
-                return;
+                return Promise.reject();
             }
             return api
                 .search_vip({
-                    vip_code: keyword,
+                    vip_code: keyWords,
                     wkdm: '',
                     is_select_vip: '',
                     source: '6'
@@ -358,19 +365,19 @@ export default {
                     }
                 });
         },
-        searchCoupon() {
-            return api.search_coupons({ coupon_code: this.keyWords });
+        searchCoupon(keyWords) {
+            return api.search_coupons({ coupon_code: keyWords });
         },
         // 添加商品到购物车
-        // searchGoods(good) {
-        //     const goodInCartIndex = this.goodsCart.goods.findIndex(g => g.sku === good.sku);
-        //     if (goodInCartIndex >= 0) {
-        //         this.goodsCart.goods[goodInCartIndex].sl++
-        //     } else {
-        //         this.goodsCart.goods.push(good);
-        //     }
-        //     this.refreshCart();
-        // },
+        addGoodToCart(good) {
+            const goodInCartIndex = this.goodsCart.goods.findIndex(g => g.sku === good.sku);
+            if (goodInCartIndex >= 0) {
+                this.goodsCart.goods[goodInCartIndex].sl++
+            } else {
+                this.goodsCart.goods.push(good);
+            }
+            this.refreshCart();
+        },
         // 显示编辑弹框
         showGoodEditPannel(good) {
             this.edittedGoodPrice = '';

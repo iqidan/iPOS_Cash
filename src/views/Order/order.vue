@@ -1,6 +1,8 @@
 <template>
     <div class="order">
         <search-header
+            @search="getOrders(true)"
+            @filterChange="changeSearchType"
             :showBtn="true"
             :select-list="selectList"
             :placeholder="'请输入小票单号'"
@@ -52,33 +54,54 @@ export default {
         return {
             filters: {
                 page: 0,
-                page_size: 15
+                page_size: 15,
+                shop_code: this.$store.state.shop_config.shop_code
             },
-            selectList: ['所有', '未完成'],
+            searchType: 'all',
+            selectList: [
+                {
+                    label: '所有',
+                    value: 'all'
+                },
+                {
+                    label: '未付款',
+                    value: 'nopay'
+                }
+            ],
             hasNoMore: false,
             orderList: []
         };
     },
     computed: {
         ...mapState({
-            shop_config: 'shop_config',
-            shop_code: state => state.shopConfig.shop_config.shopCode
+            shop_config: 'shop_config'
         })
     },
     methods: {
         scroll: throttle(function(e) {
             this.$route.meta.y = e.target.scrollTop;
         }, 100),
+        changeSearchType(type) {
+            this.searchType = type.value;
+        },
         /**
          * @param {Boolean} isRefresh [是否重置列表(刷新)]
          */
         getOrders(isRefresh = false) {
+            let params = this.filters;
             if (isRefresh) {
+                this.orderList.splice(0);
                 this.filters.page = 1;
             } else {
                 this.filters.page++;
             }
-            return api.get_order_list(this.filters).then(res => {
+            if (this.searchType === 'nopay') {
+                params = Object.assign({
+                    status: [1],
+                    payState: [0]
+                }, this.filters);
+            }
+            return api.get_order_list(params).then(res => {
                 const hasNoMore = res.data.page >= res.data.page_count;
                 return [res.data.data, hasNoMore];
             });

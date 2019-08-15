@@ -167,7 +167,6 @@ export default {
 }
 
 .input {
-    padding-left: 20px;
     flex: 1;
     min-height: auto;
     border-radius: inherit;
