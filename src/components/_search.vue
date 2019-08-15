@@ -67,73 +67,6 @@ export default {
         selectFilter() {
             this.popupVisible = false;
             this.$emit('filterChange', this.checkedItem);
-        },
-        //检查vip相关信息
-        vip_check(vip) {
-            let getHeight = () => MessageBox.prompt('请录入会员身高', '提示', {
-                inputPlaceholder: '请录入身高(CM)',
-                inputType: 'number',
-                showCancelButton: updateVip.control !== 1,
-                closeOnClickModal: false
-            })
-                .then(({ value }) => {
-                    if (value < 1 || value > 300) {
-                        this.$toast('请输入会员身高(CM)');
-                        return Promise.reject();
-                    } else {
-                        return value;
-                    }
-                }).catch(err => {
-                    if (!err) return getHeight();
-                });
-
-            let getWeight = () => MessageBox.prompt('请录入会员体重', '提示', {
-                inputPlaceholder: '请录入体重(KG)',
-                inputType: 'number',
-                showCancelButton: updateVip.control !== 1,
-                closeOnClickModal: false
-            })
-                .then(({ value }) => {
-                    if (value < 1 || value > 500) {
-                        this.$toast('请输入会员体重(KG)');
-                        return Promise.reject();
-                    } else {
-                        return value;
-                    }
-                }).catch(err => {
-                    if (!err) return getHeight();
-                });
-
-            let updateVipArr = this.update_vip_list,
-                updateVip = null;
-
-            updateVipArr.some(v => {
-                if (v.brand === this.selected_brand.brand.code) {
-                    updateVip = v;
-                    return true;
-                }
-
-                return false;
-            });
-
-            if (updateVip === null) {
-                return;
-            }
-
-            if (!updateVip || updateVip.enable !== 1 || (vip.collectheight && vip.collectweight)) {
-                return;
-            }
-
-            Promise.all([getHeight(), getWeight()]).then(([height, weight]) => {
-                console.log('=============');
-                console.log(height);
-                console.log(height);
-            });
-            // this.$http.update_vip({
-            //     vip_code:this.selected_vip.vip_code,
-            //     collectheight:Number(height),
-            //     collectweight:Number(value)
-            // })
         }
     },
     created() {}
@@ -147,6 +80,9 @@ export default {
     display: flex;
     font-size: 28px;
     background-color: #e1e1e1;
+    /deep/ .mint-radiolist-title {
+        display: none;
+    }
 }
 
 .filters {

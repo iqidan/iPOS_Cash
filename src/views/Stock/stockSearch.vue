@@ -51,8 +51,8 @@ export default {
     },
     computed: {
         ...mapState({
-            shop_config: state => state.shopConfig.shop_config,
-            shop_code: state => state.shopConfig.shop_config.shopCode
+            shop_config: state => state.shop_config,
+            shop_code: state => state.shop_config.shop_code
         })
     },
     created() {
@@ -113,7 +113,9 @@ export default {
                     });
                     this.search_result = all_result;
                 })
-            )
+            ).catch(() =>{
+                this.$toast('未查找到商品');
+            })
         }
     }
 };
